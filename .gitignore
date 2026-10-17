@@ -1,0 +1,15 @@
+# Bí mật / cấu hình cục bộ
+.env
+.env.*
+!.env.example
+
+# Máy cục bộ
+.DS_Store
+.claude/scheduled_tasks.lock
+
+# --- TẠM: file lặt vặt ở thư mục gốc, sẽ xoá/dọn sau — xoá các dòng dưới khi xong ---
+# Bản Spring Boot cũ: application.properties chứa mật khẩu DB/JWT thô, và chưa phải git repo.
+/genealogy-legacy/
+# Ảnh thử rời rạc (~25MB), tránh vô tình đưa vào lịch sử git.
+/*.png
+/*.jpeg

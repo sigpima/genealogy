@@ -1,0 +1,6 @@
+[submodule "genealogy-api"]
+	path = genealogy-api
+	url = ./genealogy-api
+[submodule "genealogy-web"]
+	path = genealogy-web
+	url = ./genealogy-web

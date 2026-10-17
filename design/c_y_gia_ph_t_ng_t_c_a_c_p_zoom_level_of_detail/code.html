@@ -1,0 +1,708 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container-low": "#f6f3ed", "inverse-primary": "#ffb2b6", "on-secondary-container": "#735700", "background": "#fcf9f3", "inverse-surface": "#31312d", "surface": "#fcf9f3", "error-container": "#ffdad6", "on-primary": "#ffffff", "on-error": "#ffffff", "outline": "#897172", "inverse-on-surface": "#f3f0ea", "on-error-container": "#93000a", "secondary-container": "#fece57", "primary": "#6c0c20", "primary-fixed": "#ffdadb", "on-tertiary-container": "#94c7b3", "on-background": "#1c1c18", "secondary": "#775a00", "on-primary-container": "#ffa3a9", "surface-container-lowest": "#ffffff", "primary-container": "#8b2635", "tertiary": "#053d2f", "on-tertiary": "#ffffff", "on-surface": "#1c1c18", "on-secondary": "#ffffff", "surface-dim": "#dcdad4", "tertiary-fixed-dim": "#9ed1bd", "on-tertiary-fixed-variant": "#1d4f40", "secondary-fixed": "#ffdf98", "surface-container-high": "#ebe8e2", "on-primary-fixed-variant": "#842131", "tertiary-fixed": "#baeed9", "error": "#ba1a1a", "tertiary-container": "#235445", "surface-container-highest": "#e5e2dc", "outline-variant": "#ddc0c0", "on-primary-fixed": "#40000d", "on-secondary-fixed": "#251a00", "primary-fixed-dim": "#ffb2b6", "surface-container": "#f0eee8", "surface-tint": "#a43946", "on-surface-variant": "#564242", "secondary-fixed-dim": "#eec14b", "on-secondary-fixed-variant": "#5a4300", "on-tertiary-fixed": "#002117", "surface-bright": "#fcf9f3", "surface-variant": "#e5e2dc" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xl": "2.5rem", "margin-mobile": "1rem", "space-sm": "0.5rem", "space-lg": "1.5rem", "gutter": "1.5rem", "space-xs": "0.25rem", "margin": "2rem", "gutter-mobile": "0.75rem", "space-md": "1rem" }, "fontFamily": { "label-lg": ["Be Vietnam Pro"], "title-sm": ["Be Vietnam Pro"], "body-sm": ["Be Vietnam Pro"], "display-lg": ["Noto Serif"], "headline-sm": ["Noto Serif"], "label-sm": ["Be Vietnam Pro"], "body-md": ["Be Vietnam Pro"], "headline-lg-mobile": ["Noto Serif"], "body-lg": ["Be Vietnam Pro"], "title-lg": ["Noto Serif"], "headline-lg": ["Noto Serif"], "label-md": ["Be Vietnam Pro"], "title-md": ["Be Vietnam Pro"], "display-lg-mobile": ["Noto Serif"], "headline-md": ["Noto Serif"] }, "fontSize": { "label-lg": ["14px", {"lineHeight": "20px", "fontWeight": "500"}], "title-sm": ["14px", {"lineHeight": "20px", "fontWeight": "600"}], "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}], "display-lg": ["48px", {"lineHeight": "56px", "fontWeight": "700"}], "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}], "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600"}], "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}], "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}], "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}], "title-lg": ["18px", {"lineHeight": "24px", "fontWeight": "600"}], "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}], "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}], "title-md": ["16px", {"lineHeight": "22px", "fontWeight": "600"}], "display-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "700"}], "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}] } } } };</script></head><body class="bg-surface text-on-surface font-body-md text-body-md antialiased"><header class="fixed top-0 left-0 right-0 h-16 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex items-center justify-between px-gutter"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 rounded-full bg-primary-container/10 flex items-center justify-center p-0.5 shadow-sm"><img alt="Biểu trưng Dòng họ" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1XBRe9YTH_jEITn4CDN_oe3RPn3LmgvAeFTqPLIulWTc34o1MqojcrnQtWOE11CHcJO2ArIABAVxsFA7tFQPq_OF3pwAHrnT_JigNDT732pgVo4w_1McT-GUcJvncgiNItvC5Y0YJwdfBgdRMydi1nGbPym-2DZqUiAILXCTbqKaZNawHQpLTB2L2sTvLkcGPzTuL_VWxiyO0_ZnyjWqrmlAnWGGXgOZJ1ennlZD-9Ce8vPUsmH5O5ZnQ"></div><div><h1 class="font-title-md text-title-md text-primary tracking-tight leading-none uppercase">Gia Tộc Nguyễn Đức</h1><p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mt-0.5">Chi Trưởng Tiên Điền • Khởi Tổ Khang Hy</p></div></div><div class="h-6 w-px bg-surface-container-high mx-space-xs hidden md:block"></div><div class="hidden md:flex items-center bg-surface-container-low px-space-sm py-1 rounded-xl text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"><span class="font-label-md text-label-md mr-1">Nhánh:</span><span class="font-title-sm text-title-sm text-primary">Chi Đại Tôn (Cành 1)</span><span class="material-symbols-outlined text-sm ml-1">arrow_drop_down</span></div></div><div class="flex-1 max-w-md mx-space-lg hidden lg:block"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-base">search</span><input class="w-full bg-surface-container-low hover:bg-surface-container-high focus:bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant text-body-sm font-body-sm pl-9 pr-space-md py-1.5 rounded-xl outline-none transition-all" placeholder="Tra cứu tên húy, năm sinh, thế hệ (ví dụ: Đức Quang, Đời 5)..." type="text"></div></div><div class="flex items-center gap-space-sm"><button class="hidden sm:flex items-center gap-1.5 bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md px-space-md py-2 rounded-xl transition-all shadow-[0_1px_4px_rgba(0,0,0,0.03)]" type="button"><span class="material-symbols-outlined text-base">picture_as_pdf</span><span>Xuất Phả Đồ</span></button><button class="flex items-center gap-1.5 bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-space-md py-2 rounded-xl transition-all shadow-sm" type="button"><span class="material-symbols-outlined text-base">person_add</span><span>Thêm Thành Viên</span></button><div class="h-6 w-px bg-surface-container-high mx-space-xs hidden sm:block"></div><div class="flex items-center gap-space-xs cursor-pointer"><div class="flex flex-col items-end hidden xl:flex"><span class="font-title-sm text-title-sm text-on-surface leading-tight">Nguyễn Đức Trọng</span><span class="font-label-sm text-label-sm text-secondary-fixed-dim leading-none">Trưởng Ban Trị Sự</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary/20" src="https://lh3.googleusercontent.com/aida/AEtjO1XBRe9YTH_jEITn4CDN_oe3RPn3LmgvAeFTqPLIulWTc34o1MqojcrnQtWOE11CHcJO2ArIABAVxsFA7tFQPq_OF3pwAHrnT_JigNDT732pgVo4w_1McT-GUcJvncgiNItvC5Y0YJwdfBgdRMydi1nGbPym-2DZqUiAILXCTbqKaZNawHQpLTB2L2sTvLkcGPzTuL_VWxiyO0_ZnyjWqrmlAnWGGXgOZJ1ennlZD-9Ce8vPUsmH5O5ZnQ"></div></div></header><aside class="fixed left-0 top-16 bottom-0 w-64 bg-surface-container-low z-40 flex flex-col justify-between py-space-md px-space-sm shadow-[0_1px_8px_rgba(0,0,0,0.02)]"><nav class="flex flex-col gap-1.5" data-active-classes="bg-primary-container text-on-primary font-semibold shadow-sm"><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all font-title-sm text-title-sm" data-path="cay-gia-pha" href="#"><span class="material-symbols-outlined text-lg">account_tree</span><span>Cây Gia Phả</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all font-title-sm text-title-sm" data-path="su-ky-dong-ho" href="#"><span class="material-symbols-outlined text-lg">menu_book</span><span>Sử Ký Dòng Họ</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all font-title-sm text-title-sm" data-path="lang-mo-nha-tho" href="#"><span class="material-symbols-outlined text-lg">temple_buddhist</span><span>Lăng Mộ &amp; Nhà Thờ</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all font-title-sm text-title-sm" data-path="lich-gio-su-kien" href="#"><span class="material-symbols-outlined text-lg">event</span><span>Lịch Giỗ &amp; Sự Kiện</span></a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all font-title-sm text-title-sm" data-path="thong-ke-phan-tich" href="#"><span class="material-symbols-outlined text-lg">analytics</span><span>Thống Kê &amp; Phân Tích</span></a></nav><div class="bg-surface-container rounded-xl p-space-sm"><div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm mb-1"><span>Tộc Ước Tiên Điền</span><span class="material-symbols-outlined text-xs">verified</span></div><p class="font-body-sm text-body-sm text-on-surface-variant italic leading-relaxed">“Ẩm thủy tư nguyên, mộc hữu bản thủy hữu nguyên, nhân do tổ tiên.”</p></div></aside><div class="pl-64"><main class="relative pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full h-[calc(100vh-64px)] overflow-hidden relative select-none">
+<!-- Subtle Vintage Papyrus Background Texture & Coordinates -->
+<div class="absolute inset-0 bg-[#fbf8f2] pointer-events-none">
+<div class="absolute inset-0 opacity-[0.035]" style="background-image: radial-gradient(#6c0c20 1px, transparent 1px); background-size: 28px 28px;"></div>
+<div class="absolute inset-0 bg-gradient-to-tr from-secondary/5 via-transparent to-primary/5"></div>
+</div>
+<!-- FLOATING TOP BAR: View Modes, Generation Filter & Quick LOD Switcher -->
+<header class="relative z-20 mx-gutter mt-space-md mb-2 flex flex-wrap items-center justify-between gap-space-sm bg-surface-container-lowest/90 backdrop-blur-md px-space-md py-2.5 rounded-xl shadow-[0_4px_20px_-4px_rgba(45,28,20,0.08)]">
+<!-- Generation Filter Chips -->
+<div class="flex items-center gap-1.5 overflow-x-auto py-0.5">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider flex items-center gap-1 mr-1">
+<span class="material-symbols-outlined text-sm">filter_vintage</span>Đời:
+      </span>
+<button class="px-2.5 py-1 rounded-lg bg-primary text-on-primary font-label-md text-label-md shadow-sm flex items-center gap-1" type="button">
+<span>Đời I (Khởi Tổ)</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed"></span>
+</button>
+<button class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors" type="button">
+        Đời II (4)
+      </button>
+<button class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors" type="button">
+        Đời III (12)
+      </button>
+<button class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors" type="button">
+        Đời IV (38)
+      </button>
+<button class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors" type="button">
+        Đời V (96)
+      </button>
+<button class="px-2 py-1 rounded-lg bg-surface-container text-on-surface-variant font-label-sm text-label-sm hover:text-on-surface" type="button">
+        +2 Đời
+      </button>
+</div>
+<!-- Layout & Perspective Selectors -->
+<div class="flex items-center gap-space-sm ml-auto">
+<div class="hidden xl:flex items-center bg-surface-container-low p-0.5 rounded-lg text-on-surface-variant">
+<button class="px-2.5 py-1 rounded-md bg-surface-container-lowest text-primary font-label-sm text-label-sm shadow-xs flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-xs">schema</span>Cây Dọc
+        </button>
+<button class="px-2.5 py-1 rounded-md text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-xs">reorder</span>Cây Ngang
+        </button>
+<button class="px-2.5 py-1 rounded-md text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-xs">group</span>Đinh &amp; Duệ
+        </button>
+</div>
+<!-- Adaptive LOD Mode Segmented Control -->
+<div class="flex items-center bg-surface-container p-0.5 rounded-lg">
+<button class="px-2.5 py-1 rounded-md bg-surface-container-lowest text-primary font-label-sm text-label-sm shadow-xs flex items-center gap-1" id="lodDetailedBtn" onclick="setLODMode('detailed')" type="button">
+<span class="material-symbols-outlined text-xs">badge</span>
+<span class="hidden md:inline">Chi Tiết</span> (100%)
+        </button>
+<button class="px-2.5 py-1 rounded-md text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm flex items-center gap-1" id="lodOverviewBtn" onclick="setLODMode('overview')" type="button">
+<span class="material-symbols-outlined text-xs">grain</span>
+<span class="hidden md:inline">Tổng Quan (Thu nhỏ)</span> (30%)
+        </button>
+</div>
+</div>
+</header>
+<!-- WORKSPACE: Infinite Canvas + Detail Slide-over Panel -->
+<div class="relative flex-1 w-full overflow-hidden flex">
+<!-- MAIN INTERACTIVE CANVAS -->
+<div class="flex-1 h-full overflow-auto cursor-grab active:cursor-grabbing p-12 relative scrollbar-none" id="treeCanvas" style="scroll-behavior: smooth;">
+<div class="min-w-[1440px] flex flex-col items-center justify-start transition-transform duration-300 origin-top" id="canvasViewport">
+<!-- ==================== TẦNG I: KHỞI TỔ ==================== -->
+<div class="flex flex-col items-center relative">
+<!-- Generation Milestone Badge -->
+<div class="mb-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed/50 text-secondary-fixed-variant font-label-sm text-label-sm uppercase tracking-widest shadow-xs">
+<span class="material-symbols-outlined text-xs text-secondary">crown</span>
+<span>Đời I • Cụ Khởi Tổ Thuần Đức</span>
+</div>
+<!-- Gen I Spouses Pair -->
+<div class="flex items-center gap-6 relative">
+<!-- Node: Khởi Tổ Ông -->
+<div class="member-node group relative w-[250px] bg-surface-container-lowest rounded-xl p-3.5 shadow-[0_4px_16px_-2px_rgba(60,42,33,0.08)] hover:shadow-[0_8px_24px_-4px_rgba(108,12,32,0.18)] cursor-pointer transition-all hover:-translate-y-0.5" onclick="selectMember('nguyen-duc-tinh')">
+<div class="flex items-start gap-3">
+<div class="relative">
+<div class="w-12 h-12 rounded-full overflow-hidden shadow-xs ring-2 ring-secondary/50">
+<img class="w-full h-full object-cover" data-alt="Chân dung phục dựng truyền thần Cụ Khởi Tổ trang nghiêm áo the khăn xếp màu nhung thẫm phong cách tranh khắc gỗ truyền thống Việt Nam mực nho" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0NSQ-8g183DKrPTO8cF6RA9VxdTuVcybkDACumcv-MAozOXur5iK8lCmSeF3Ua4pRVBUhay72NqlClzZbrYu9f7UZ7ewZ6ZTvEFKkrpbju8WBsd9-VxV-IBbbUV_IPuxMLMH11kSWuAm_KcMRp17W48scn1bjH3IqtjJoDJGxUQcR4rppZvgPMk7PnmJET8sPa2NcIjer8LHBXsLwhctGsBBHta6dlx1MmFDGH0oFTvnYcd5NEOS-">
+</div>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm text-[10px]">I</span>
+</div>
+<div class="flex-1 min-w-0">
+<span class="font-label-sm text-label-sm text-secondary-fixed-variant uppercase tracking-wider block">Khởi Tổ Tiên Điền</span>
+<h3 class="font-title-md text-title-md text-primary font-bold truncate">Nguyễn Đức Tĩnh</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">1892 – 1968</p>
+</div>
+</div>
+<div class="mt-2.5 pt-2 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm bg-surface-container-low/70 px-2 py-1 rounded-lg">
+<span class="text-tertiary font-medium">Hưởng thọ 76 tuổi</span>
+<span class="text-primary font-semibold">4 Chi Phái</span>
+</div>
+</div>
+<!-- Connector icon between couple -->
+<div class="flex flex-col items-center justify-center text-secondary/70">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant uppercase">Hôn phối</span>
+</div>
+<!-- Node: Khởi Tổ Bà -->
+<div class="member-node group relative w-[250px] bg-surface-container-lowest rounded-xl p-3.5 shadow-[0_4px_16px_-2px_rgba(60,42,33,0.08)] hover:shadow-[0_8px_24px_-4px_rgba(108,12,32,0.18)] cursor-pointer transition-all hover:-translate-y-0.5" onclick="selectMember('tran-thi-mui')">
+<div class="flex items-start gap-3">
+<div class="relative">
+<div class="w-12 h-12 rounded-full overflow-hidden shadow-xs ring-2 ring-secondary/30">
+<img class="w-full h-full object-cover" data-alt="Chân dung Cụ Bà đoan trang đầu đội khăn vấn áo lụa gấm thêu hoa cúc truyền thống tranh chân dung cổ truyền Việt Nam" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBboy-IqOMP98oJgl4d3SXFIjQ74hr-9gwS5pX5SpEVIlXpQb6mqslwTn1HO6Zq5aoa_dj9GDAE2Z0t2qPtvv55_lILffVcfO8kHAQ7u6uvHHnhfYFaOYb5oO-idZ3YGsZa9ePPkGRroA9mJcHghzCjXd77PE-jwZRstCPShPkWEbzH_2lTX5kdl4IfZSpKpLA4uPdMT94EFFGJolQU_Fb0zr2CnENEKey6Gy2zJf6HCivNNxt6e00j">
+</div>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-label-sm text-[10px]">I</span>
+</div>
+<div class="flex-1 min-w-0">
+<span class="font-label-sm text-label-sm text-secondary-fixed-variant uppercase tracking-wider block">Chánh Thất Phu Nhân</span>
+<h3 class="font-title-md text-title-md text-on-surface font-bold truncate">Trần Thị Mùi</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">1895 – 1974</p>
+</div>
+</div>
+<div class="mt-2.5 pt-2 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm bg-surface-container-low/70 px-2 py-1 rounded-lg">
+<span class="text-tertiary font-medium">Hưởng thọ 79 tuổi</span>
+<span>Nguyên quán Nam Trực</span>
+</div>
+</div>
+</div>
+<!-- Vertical Connector Line from Gen I to Branches -->
+<div class="w-0.5 h-16 bg-gradient-to-b from-secondary to-primary my-1"></div>
+</div>
+<!-- ==================== TẦNG II: 4 CHI NHÁNH CHÍNH ==================== -->
+<div class="w-full flex flex-col items-center relative">
+<!-- Horizontal Trunk Splitter Bar -->
+<div class="w-[1080px] h-0.5 bg-outline-variant/60 relative">
+<div class="absolute left-0 -top-1 w-2 h-2 rounded-full bg-primary"></div>
+<div class="absolute left-1/3 -top-1 w-2 h-2 rounded-full bg-primary"></div>
+<div class="absolute left-2/3 -top-1 w-2 h-2 rounded-full bg-primary"></div>
+<div class="absolute right-0 -top-1 w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<!-- Gen II Nodes Container -->
+<div class="w-[1180px] grid grid-cols-4 gap-6 pt-6">
+<!-- CHI 1: ĐẠI TÔN (Full Detailed Focus) -->
+<div class="flex flex-col items-center">
+<div class="w-0.5 h-6 bg-outline-variant/60 -mt-6 mb-2"></div>
+<span class="px-2 py-0.5 mb-2 rounded bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-label-sm uppercase font-semibold">
+                Chi Trưởng • Đời II
+              </span>
+<div class="member-node ring-2 ring-primary/40 bg-surface-container-lowest rounded-xl p-3 w-full shadow-sm hover:shadow-md cursor-pointer transition-all" onclick="selectMember('nguyen-duc-khang')">
+<div class="flex items-center gap-2.5">
+<div class="w-10 h-10 rounded-full overflow-hidden ring-1 ring-primary/30 shrink-0">
+<img class="w-full h-full object-cover" data-alt="Chân dung Cụ Trưởng nam trung niên mặc áo dài gấm đen nghiêm nghị khí độ đĩnh đạc gia phong Việt Nam" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbs1wZ3L2zvfB5J80fmUVY6n96mC_9XEiuIXZHpcQLm-JggVzmJGhtFGppDRY-F5XcLd7GrN2erx5cXBcwM-c2ybQ1cX8Oy4y9cBDMrcAfVQkWK4OntzPSCD0bHusIkuf3u3YKl6fqk3JiK5AiJQHU588K-VnnWOAq5W9YNRSPyFXprSqO0zCXCUrxnHmaCIo9II5ULbhlm0OO6oMMCFkQO6qQizJXnniICz_sRxNQmk0tHpValsJt">
+</div>
+<div class="min-w-0 flex-1">
+<h4 class="font-title-sm text-title-sm text-primary font-bold truncate">Nguyễn Đức Khang</h4>
+<p class="font-body-sm text-[11px] text-on-surface-variant leading-tight">1918 – 1989 • Đời II</p>
+</div>
+</div>
+<div class="mt-2 flex items-center justify-between text-label-sm font-label-sm pt-1.5 bg-surface-container-low px-2 py-0.5 rounded">
+<span class="text-on-surface-variant">Phối: Lê Thị Thoa</span>
+<span class="text-tertiary font-semibold">3 Con</span>
+</div>
+</div>
+<!-- Connecting to Gen III (Chi Trưởng) -->
+<div class="w-0.5 h-12 bg-primary/40 my-1"></div>
+<!-- ==================== TẦNG III: HẬU DUỆ CHI TRƯỞNG ==================== -->
+<div class="w-full flex flex-col items-center">
+<div class="w-[260px] h-0.5 bg-primary/30 relative">
+<div class="absolute left-2 -top-1 w-2 h-2 rounded-full bg-primary"></div>
+<div class="absolute left-1/2 -ml-1 -top-1 w-2 h-2 rounded-full bg-primary"></div>
+<div class="absolute right-2 -top-1 w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<div class="w-full grid grid-cols-1 gap-3 pt-4">
+<!-- Active Card Selected: Nguyễn Đức Hưng -->
+<div class="member-node ring-2 ring-primary bg-primary/5 rounded-xl p-3 shadow-md cursor-pointer transition-all relative" onclick="selectMember('nguyen-duc-hung')">
+<span class="absolute -top-2 right-2 bg-primary text-on-primary font-label-sm text-[10px] px-2 py-0.5 rounded-full shadow-xs">Đang chọn</span>
+<div class="flex items-center gap-2.5">
+<div class="w-11 h-11 rounded-full overflow-hidden ring-2 ring-primary shrink-0">
+<img class="w-full h-full object-cover" data-alt="Chân dung cụ ông tóc bạc nhân từ ánh mắt phúc hậu đeo kính gọng vàng mặc âu phục lịch lãm bối cảnh thư phòng truyền thống" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKZwWrrP7uQ6pRqR4_bgzQC_1I5pHnALBqaPIeQ6EdlZd1ijodQ8zpYboSdHY9s3QyDgzWNsEz-7fgFadX68LzROG9xeU53SI6-_mOYlUQ6PN_GPoP8VeyIm3P-2bzQOaLAid_ZE54oOy90K419qmJFfAt-B9slwq0wJ9b59OiWygYkrTDP0vmKQKcf3vNa4LhM9bywxf4gYHbLY0nK98xP6vDwhymCe4Vlp8LlFeAX9IBOEn0RW_q">
+</div>
+<div class="min-w-0 flex-1">
+<span class="font-label-sm text-[10px] text-primary font-semibold uppercase">Trưởng Nam • Đời III</span>
+<h4 class="font-title-sm text-title-sm text-on-surface font-bold truncate">Nguyễn Đức Hưng</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-tertiary inline-block"></span>
+<span>1945 • 79 tuổi (Sống)</span>
+</p>
+</div>
+</div>
+<div class="mt-2.5 flex items-center justify-between text-label-sm font-label-sm pt-2 bg-surface-container-lowest/80 px-2 py-1 rounded-lg">
+<span class="text-on-surface-variant">Chi Trưởng (Hà Nội)</span>
+<span class="text-primary font-bold">2 Nam • 1 Nữ</span>
+</div>
+</div>
+<!-- Sibling 2: Nguyễn Thị Mai -->
+<div class="member-node bg-surface-container-lowest rounded-xl p-2.5 shadow-xs hover:shadow-sm cursor-pointer transition-all" onclick="selectMember('nguyen-thi-mai')">
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded-full overflow-hidden ring-1 ring-secondary/30 shrink-0">
+<img class="w-full h-full object-cover" data-alt="Chân dung bà cao niên trang nhã nụ cười ấm áp trang phục truyền thống phong thái trí thức Hà Nội xưa" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeXRZXpRRYYhSOvFk9COiRBFTNUo9R2GNabCtOR9dYVwqMHRQDaGvLJjX9NJ8-WekIUcVINlCQQEGyUdIn0UVjL35KXSr-I-YOxOlJrRWnCCL07UrZGl4HtTXfFwKMM0GV7zLB2GcJuNnpVxMDl6yKkHWNgc4g1Qs9_FsLUWxcJlK9vtiIvSAUGtfLgc2Cc28Z7rOCT7jXhQx-HWkt6qGwWSH1NLxVqiT0OPZdHeoxbXfzCOcak-9d">
+</div>
+<div class="min-w-0 flex-1">
+<span class="font-label-sm text-[10px] text-on-surface-variant block">Trưởng Nữ • Đời III</span>
+<h4 class="font-title-sm text-body-md text-on-surface font-semibold truncate">Nguyễn Thị Mai</h4>
+<p class="font-body-sm text-[11px] text-on-surface-variant">1948 – 2021 (73 tuổi)</p>
+</div>
+</div>
+</div>
+<!-- Sibling 3: Nguyễn Đức Cường -->
+<div class="member-node bg-surface-container-lowest rounded-xl p-2.5 shadow-xs hover:shadow-sm cursor-pointer transition-all" onclick="selectMember('nguyen-duc-cuong')">
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded-full overflow-hidden ring-1 ring-primary/20 shrink-0">
+<img class="w-full h-full object-cover" data-alt="Chân dung người đàn ông trung niên thành đạt phong cách điềm đạm bối cảnh phòng khách nhà cổ trang nhã" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-eKy6QeNrtbGlQhQWTVkeQZFUP4hEfGPCCWbArIyJQu2qHMYnoDV-7Je9nWCc-r3Ev3BrHptLH8O5Xx01Aioz9p0IwACnXj_94KT9mcOJXdPYRV_OOniNiCtZLr5-gtKE1AmKkEbSjHYU1OQXr4Mm2Cx8mFx18SeYTBSfHAjVQ58m5twt2kRbkArp9cXC6qwQzyUgI5kOgaNAaQwHm8jBFBS9tarETPHNgQhGdHUZXM-3NotHfm1n">
+</div>
+<div class="min-w-0 flex-1">
+<span class="font-label-sm text-[10px] text-on-surface-variant block">Thứ Nam • Đời III</span>
+<h4 class="font-title-sm text-body-md text-on-surface font-semibold truncate">Nguyễn Đức Cường</h4>
+<p class="font-body-sm text-[11px] text-on-surface-variant">1952 • 72 tuổi (TP.HCM)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- CHI 2: CHI THỨ HAI (Hybrid Mode Demo - Shows Lod pills transition) -->
+<div class="flex flex-col items-center">
+<div class="w-0.5 h-6 bg-outline-variant/60 -mt-6 mb-2"></div>
+<span class="px-2 py-0.5 mb-2 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm uppercase font-semibold">
+                Chi Hai • Đời II
+              </span>
+<div class="member-node bg-surface-container-lowest rounded-xl p-3 w-full shadow-sm hover:shadow-md cursor-pointer transition-all" onclick="selectMember('nguyen-duc-thanh')">
+<div class="flex items-center gap-2.5">
+<div class="w-10 h-10 rounded-full overflow-hidden ring-1 ring-outline-variant shrink-0">
+<img class="w-full h-full object-cover" data-alt="Chân dung Cụ Thứ nam trang trọng khí chất nho nhã tranh cổ chân dung đen trắng phục dựng tinh xảo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_g2zXyyXkkISRLOPQ74j9aFe406yGZgFIwUCMJIPg0uzEHZwA77zBx7zZLt2x2oA2-TUWj7QVzD6dRTY0R-hkMopCwYHSc-VvgajuGCS_W_7l9Li4CsJO4eVV_FbQO05g5O5aZbRMrPX95DkqWcKVpSzlSwIkAaKqtJ-_JL4JuCUHN2B_Q72XxP-DfpLNGzOzrw6-MeWlb32fdZfCEMLXHCJd44Vorl41rM3LEThvZr2xZ0N4WLgE">
+</div>
+<div class="min-w-0 flex-1">
+<h4 class="font-title-sm text-title-sm text-on-surface font-bold truncate">Nguyễn Đức Thành</h4>
+<p class="font-body-sm text-[11px] text-on-surface-variant leading-tight">1921 – 1994 • Đời II</p>
+</div>
+</div>
+<div class="mt-2 flex items-center justify-between text-label-sm font-label-sm pt-1.5 bg-surface-container-low px-2 py-0.5 rounded">
+<span class="text-on-surface-variant">Phối: Phạm Thị Sen</span>
+<span class="text-primary font-semibold">5 Con</span>
+</div>
+</div>
+<!-- Connector to Chi 2 Sub-nodes -->
+<div class="w-0.5 h-10 bg-outline-variant/60 my-1"></div>
+<!-- DEMO OF ADAPTIVE LOD PILLS (Compact representation for performance) -->
+<div class="w-full bg-surface-container-low/70 p-2.5 rounded-xl flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-[10px] text-on-surface-variant uppercase font-semibold">Hậu Duệ (5 Nhánh Đời III)</span>
+<span class="px-1.5 py-0.2 rounded bg-secondary-container text-on-secondary-container font-label-sm text-[10px]">LOD Thu Gọn</span>
+</div>
+<!-- Pill Nodes with tooltips -->
+<div class="grid grid-cols-2 gap-1.5">
+<div class="group relative flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container-lowest shadow-xs hover:bg-primary-container hover:text-on-primary transition-all cursor-pointer">
+<span class="w-2 h-2 rounded-full bg-primary shrink-0"></span>
+<span class="font-title-sm text-xs truncate">Đức Vinh</span>
+<!-- Tooltip -->
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex flex-col items-center z-30 pointer-events-none">
+<div class="bg-inverse-surface text-inverse-on-surface text-[11px] font-label-sm px-2 py-1 rounded shadow-lg whitespace-nowrap">
+                        Nguyễn Đức Vinh • 1949 • Đời III (Chi Hai)
+                      </div>
+</div>
+</div>
+<div class="group relative flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container-lowest shadow-xs hover:bg-primary-container hover:text-on-primary transition-all cursor-pointer">
+<span class="w-2 h-2 rounded-full bg-primary shrink-0"></span>
+<span class="font-title-sm text-xs truncate">Đức Long</span>
+</div>
+<div class="group relative flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container-lowest shadow-xs hover:bg-primary-container hover:text-on-primary transition-all cursor-pointer">
+<span class="w-2 h-2 rounded-full bg-secondary shrink-0"></span>
+<span class="font-title-sm text-xs truncate">Thị Liên</span>
+</div>
+<div class="group relative flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container-lowest shadow-xs hover:bg-primary-container hover:text-on-primary transition-all cursor-pointer">
+<span class="w-2 h-2 rounded-full bg-primary shrink-0"></span>
+<span class="font-title-sm text-xs truncate">Đức Hiển</span>
+</div>
+<div class="col-span-2 group relative flex items-center justify-between px-2 py-1 rounded bg-surface-container-high text-on-surface font-label-sm text-[11px] cursor-pointer hover:bg-surface-container-highest">
+<span>+ 14 Hậu duệ Đời IV-V</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+<!-- CHI 3: CHI BA (Fully Compact Dot Node Mode Demo) -->
+<div class="flex flex-col items-center">
+<div class="w-0.5 h-6 bg-outline-variant/60 -mt-6 mb-2"></div>
+<span class="px-2 py-0.5 mb-2 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm uppercase font-semibold">
+                Chi Ba • Đời II
+              </span>
+<div class="member-node bg-surface-container-lowest rounded-xl p-3 w-full shadow-sm hover:shadow-md cursor-pointer transition-all" onclick="selectMember('nguyen-duc-nghia')">
+<div class="flex items-center gap-2.5">
+<div class="w-10 h-10 rounded-full overflow-hidden ring-1 ring-outline-variant shrink-0">
+<img class="w-full h-full object-cover" data-alt="Chân dung cổ Cụ Ông mặc áo dài the truyền thống ánh mắt sâu thẳm hiền từ dòng họ Nguyễn Việt Nam" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL_PBLQ1StBbKYyNUzlmt1XNVdZbW9iY-_UQv7OdF69IRSijYeDkJeBqIn6pCuplunTzcp8v_3g2PTo5K1M1XrfVe7AIo3ncmjmC-cW7LRmzuhY_Cahv8i_itPTlpsIfh1yuxpznqYwaZmUwCbCpM6_EafvACCtnkZagCTPNkgTxlh4z7MlEgUlNykyiaVtM8fEd_xj3h-8WVipVD9S97cOn25w-j6zF7zkD_Qx_srcRMB78YMTa4W">
+</div>
+<div class="min-w-0 flex-1">
+<h4 class="font-title-sm text-title-sm text-on-surface font-bold truncate">Nguyễn Đức Nghĩa</h4>
+<p class="font-body-sm text-[11px] text-on-surface-variant leading-tight">1925 – 2002 • Đời II</p>
+</div>
+</div>
+<div class="mt-2 flex items-center justify-between text-label-sm font-label-sm pt-1.5 bg-surface-container-low px-2 py-0.5 rounded">
+<span class="text-on-surface-variant">Phối: Hoàng Thị Lan</span>
+<span class="text-primary font-semibold">4 Con</span>
+</div>
+</div>
+<div class="w-0.5 h-10 bg-outline-variant/60 my-1"></div>
+<!-- DOT MATRIX LOD VISUALIZATION -->
+<div class="w-full bg-surface-container-low/70 p-3 rounded-xl flex flex-col items-center gap-2 text-center">
+<span class="font-label-sm text-[10px] text-on-surface-variant uppercase font-semibold">Mạng Lưới 28 Thành Viên</span>
+<div class="flex flex-wrap gap-2 justify-center max-w-[200px] py-1">
+<!-- Interactive Dot Nodes with hover tooltips -->
+<div class="relative group cursor-pointer">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-[10px] shadow-xs">V</div>
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 hidden group-hover:block z-30 pointer-events-none">
+<div class="bg-inverse-surface text-inverse-on-surface font-label-sm text-xs px-2 py-1 rounded shadow-md whitespace-nowrap">Nguyễn Đức Vũ (Đời III)</div>
+</div>
+</div>
+<div class="relative group cursor-pointer">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-[10px] shadow-xs">H</div>
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 hidden group-hover:block z-30 pointer-events-none">
+<div class="bg-inverse-surface text-inverse-on-surface font-label-sm text-xs px-2 py-1 rounded shadow-md whitespace-nowrap">Nguyễn Đức Hoàng (Đời III)</div>
+</div>
+</div>
+<div class="relative group cursor-pointer">
+<div class="w-6 h-6 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-[10px] shadow-xs">N</div>
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 hidden group-hover:block z-30 pointer-events-none">
+<div class="bg-inverse-surface text-inverse-on-surface font-label-sm text-xs px-2 py-1 rounded shadow-md whitespace-nowrap">Nguyễn Thị Nga (Đời III)</div>
+</div>
+</div>
+<div class="relative group cursor-pointer">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-[10px] shadow-xs">T</div>
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 hidden group-hover:block z-30 pointer-events-none">
+<div class="bg-inverse-surface text-inverse-on-surface font-label-sm text-xs px-2 py-1 rounded shadow-md whitespace-nowrap">Nguyễn Đức Tài (Đời III)</div>
+</div>
+</div>
+<div class="w-6 h-6 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-[9px] shadow-xs cursor-pointer hover:bg-surface-container-highest">+24</div>
+</div>
+<button class="mt-1 text-primary hover:text-primary-container font-label-sm text-[11px] font-semibold flex items-center gap-0.5" type="button">
+<span>Mở rộng phả đồ nhánh Ba</span>
+<span class="material-symbols-outlined text-xs">unfold_more</span>
+</button>
+</div>
+</div>
+<!-- CHI 4: CHI ÚT -->
+<div class="flex flex-col items-center">
+<div class="w-0.5 h-6 bg-outline-variant/60 -mt-6 mb-2"></div>
+<span class="px-2 py-0.5 mb-2 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm uppercase font-semibold">
+                Chi Út • Đời II
+              </span>
+<div class="member-node bg-surface-container-lowest rounded-xl p-3 w-full shadow-sm hover:shadow-md cursor-pointer transition-all" onclick="selectMember('nguyen-thi-thao')">
+<div class="flex items-center gap-2.5">
+<div class="w-10 h-10 rounded-full overflow-hidden ring-1 ring-secondary/30 shrink-0">
+<img class="w-full h-full object-cover" data-alt="Chân dung Cụ Bà Út đoan trang nét mặt từ hậu thanh thoát trang phục truyền thống áo the hoa văn nhã nhặn" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6LpHopc_UidyGc8oiL3k-LcwHmRxty6_JctSrQPbeyPyOLh9K36oM9eP_ZgT_hHHHGER_1GglXNoFyY4jA8CQ0cGfTJuIGxFUON8wxYRdF2PFZKYWPIU-PK-nM5bKRdBvaCVxSYiln5fl-E5Qbat_dFL2tP1SJsKp-Z5Sb5OwW-YvRXMev1vgqhgCAU95jL2f-B-xTLwPEqnnqczP4y_1B-2kymrVjeIuZh1gGCIOnyvmcnPal0u-">
+</div>
+<div class="min-w-0 flex-1">
+<h4 class="font-title-sm text-title-sm text-on-surface font-bold truncate">Nguyễn Thị Thảo</h4>
+<p class="font-body-sm text-[11px] text-on-surface-variant leading-tight">1929 – 2015 • Đời II</p>
+</div>
+</div>
+<div class="mt-2 flex items-center justify-between text-label-sm font-label-sm pt-1.5 bg-surface-container-low px-2 py-0.5 rounded">
+<span class="text-on-surface-variant">Phối: Vũ Đình Khiêm</span>
+<span class="text-primary font-semibold">3 Con (Ngoại)</span>
+</div>
+</div>
+<div class="w-0.5 h-10 bg-outline-variant/60 my-1"></div>
+<div class="w-full bg-surface-container-low/70 p-3 rounded-xl flex flex-col items-center text-center">
+<span class="font-label-sm text-[10px] text-on-surface-variant uppercase font-semibold">Ngoại Duệ • Hải Phòng</span>
+<p class="font-body-sm text-xs text-on-surface-variant mt-1">Đã nhập phả hệ nhánh ngoại gồm 18 thành viên</p>
+<button class="mt-2 px-2.5 py-1 rounded-lg bg-surface-container-lowest text-on-surface text-label-sm font-label-sm shadow-2xs hover:bg-surface-container transition-colors" type="button">
+                  Xem nhánh ngoại
+                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- MINIMAP (FLOATING BOTTOM LEFT) -->
+<div class="absolute bottom-6 left-6 z-20 w-56 h-36 bg-surface-container-lowest/95 backdrop-blur-md rounded-xl p-2.5 shadow-[0_12px_32px_-4px_rgba(45,28,20,0.16)] flex flex-col justify-between hidden md:flex">
+<div class="flex items-center justify-between pb-1.5 border-b border-surface-container-high">
+<div class="flex items-center gap-1.5 text-on-surface font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-xs text-primary">map</span>
+<span>Bản Đồ Gia Tộc</span>
+</div>
+<span class="font-label-sm text-[10px] text-on-surface-variant">Đời I – VII</span>
+</div>
+<!-- Minimap canvas representation -->
+<div class="relative w-full flex-1 bg-surface-container-low/90 rounded-lg overflow-hidden my-1 flex items-center justify-center p-1">
+<!-- Abstract tree dots schema -->
+<svg class="w-full h-full text-outline-variant/60" fill="none" stroke="currentColor" viewBox="0 0 100 60">
+<!-- Root -->
+<circle cx="50" cy="8" fill="#6c0c20" r="3"></circle>
+<!-- Gen 2 branches -->
+<path d="M50 11 L50 20 M20 20 L80 20 M20 20 L20 26 M40 20 L40 26 M60 20 L60 26 M80 20 L80 26" stroke-width="1.2"></path>
+<circle cx="20" cy="28" fill="#6c0c20" r="2.5"></circle>
+<circle cx="40" cy="28" fill="#775a00" r="2.5"></circle>
+<circle cx="60" cy="28" fill="#775a00" r="2.5"></circle>
+<circle cx="80" cy="28" fill="#775a00" r="2.5"></circle>
+<!-- Gen 3 Sub branch -->
+<path d="M20 31 L20 40 M12 40 L28 40 M12 40 L12 48 M20 40 L20 48 M28 40 L28 48" stroke-width="1"></path>
+<circle cx="12" cy="50" fill="#8b2635" r="2"></circle>
+<circle cx="20" cy="50" fill="#8b2635" r="2"></circle>
+<circle cx="28" cy="50" fill="#8b2635" r="2"></circle>
+</svg>
+<!-- Viewport red frame box (Minimap Camera) -->
+<div class="absolute inset-x-2 top-1 bottom-4 border-2 border-primary bg-primary/10 rounded pointer-events-none animate-pulse"></div>
+</div>
+<div class="flex items-center justify-between font-label-sm text-[10px] text-on-surface-variant pt-0.5">
+<span>342 Thành Viên</span>
+<span class="text-primary font-medium">Toàn cảnh 100%</span>
+</div>
+</div>
+<!-- FLOATING ZOOM & CANVAS CONTROLS (BOTTOM CENTER/RIGHT) -->
+<div class="absolute bottom-6 right-8 md:right-[430px] z-20 flex items-center gap-1.5 bg-surface-container-lowest/95 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-[0_12px_32px_-4px_rgba(45,28,20,0.16)]">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface hover:bg-surface-container transition-colors" onclick="adjustZoom(-0.15)" title="Thu nhỏ (-)" type="button">
+<span class="material-symbols-outlined text-base">remove</span>
+</button>
+<!-- Zoom Range Slider -->
+<div class="flex items-center gap-2 px-1">
+<input class="w-24 accent-primary h-1.5 bg-surface-container-highest rounded-lg cursor-pointer" id="zoomSlider" max="150" min="30" oninput="onSliderChange(this.value)" type="range" value="100">
+<span class="font-label-md text-label-md text-primary font-semibold w-10 text-right" id="zoomPercentLabel">100%</span>
+</div>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface hover:bg-surface-container transition-colors" onclick="adjustZoom(0.15)" title="Phóng to (+)" type="button">
+<span class="material-symbols-outlined text-base">add</span>
+</button>
+<div class="h-4 w-px bg-surface-container-high mx-1"></div>
+<button class="px-2 py-1 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-sm text-label-sm transition-colors" onclick="resetZoom()" title="Về 100%" type="button">
+        Reset
+      </button>
+<button class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm font-medium transition-colors" onclick="fitScreen()" title="Xem toàn cảnh gia tộc" type="button">
+<span class="material-symbols-outlined text-sm">fit_screen</span>
+<span class="hidden sm:inline">Toàn cảnh</span>
+</button>
+</div>
+<!-- RIGHT SLIDE-OUT DETAIL DRAWER / INSPECTOR PANEL (400px Fixed Desktop) -->
+<aside class="w-[410px] h-full bg-surface-container-lowest z-30 shadow-[-8px_0_24px_rgba(45,28,20,0.06)] flex flex-col justify-between overflow-y-auto" id="memberDrawer">
+<!-- Drawer Header with Seal Pattern -->
+<div class="relative p-space-lg pb-4 bg-gradient-to-b from-surface-container-low to-surface-container-lowest">
+<!-- Traditional Seal Stamp Watermark -->
+<div class="absolute top-4 right-4 w-14 h-14 rounded-lg border-2 border-primary/20 flex flex-col items-center justify-center text-primary/30 font-display-lg text-[10px] leading-tight select-none pointer-events-none rotate-6">
+<span>NGUYỄN</span>
+<span>TỘC</span>
+</div>
+<div class="flex items-center justify-between mb-3">
+<span class="px-2.5 py-0.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm uppercase font-semibold tracking-wider">
+            Chi Trưởng • Đời III
+          </span>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors" title="In gia phả nhánh này" type="button">
+<span class="material-symbols-outlined text-lg">print</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors" title="Chia sẻ hồ sơ" type="button">
+<span class="material-symbols-outlined text-lg">share</span>
+</button>
+</div>
+</div>
+<!-- Selected Member Hero Profile -->
+<div class="flex items-start gap-4">
+<div class="relative">
+<div class="w-20 h-20 rounded-2xl overflow-hidden shadow-md ring-2 ring-primary/40">
+<img class="w-full h-full object-cover" data-alt="Chân dung Cụ Ông Nguyễn Đức Hưng góc chụp chân dung trang trọng ánh mắt phúc hậu tinh anh phong cách danh nhân Việt Nam" id="drawerAvatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDvUlLqWbYBK_NH7fjmghmzX-J1GjaxfhVLk2qM_5PLRCGLqcLB9-OGeUxma-Y2Jhjafn0IXyPHgoeo95K9Z9pSSjhwbTHyQxC6iWOIY7QDwQCFaXlKbkNwMsjMnEW8FjozPBKitAlN89htbRS9WiYyVZifumTFgO31VWez9pvogeNpCmx1mMF6zWy-agE905mPiNv68Kd8z5eVtK_9IqNb9rhQ5eqfJFFT_k_8-MKhO24661zAEhQ">
+</div>
+<span class="absolute -bottom-1.5 -right-1.5 px-1.5 py-0.5 rounded bg-tertiary text-on-tertiary font-label-sm text-[10px] font-bold shadow-xs">
+              Đang sống
+            </span>
+</div>
+<div class="flex-1 min-w-0">
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold leading-tight" id="drawerName">
+              Nguyễn Đức Hưng
+            </h2>
+<p class="font-label-md text-label-md text-secondary font-medium mt-0.5">Tự: Phúc Khang • Trưởng Chi</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-secondary">cake</span>
+<span>Sinh ngày: 15/08/1945 (Ất Dậu) • 79 tuổi</span>
+</p>
+</div>
+</div>
+</div>
+<!-- Drawer Tabs -->
+<div class="px-space-lg flex items-center border-b border-surface-container-high gap-4">
+<button class="pb-2.5 font-title-sm text-title-sm text-primary border-b-2 border-primary font-semibold flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-base">person</span>
+<span>Tiểu Sử</span>
+</button>
+<button class="pb-2.5 font-title-sm text-title-sm text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-base">diversity_1</span>
+<span>Hôn Phối &amp; Con</span>
+</button>
+<button class="pb-2.5 font-title-sm text-title-sm text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-base">temple_buddhist</span>
+<span>Mộ Phần</span>
+</button>
+</div>
+<!-- Tab Content Area -->
+<div class="flex-1 p-space-lg space-y-5 overflow-y-auto">
+<!-- Biography & Career Highlight -->
+<div>
+<h4 class="font-label-sm text-label-sm text-secondary-fixed-variant uppercase tracking-wider mb-2 flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-xs">history_edu</span>
+            Hành Trạng &amp; Công Đức
+          </h4>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed bg-surface-container-low p-3.5 rounded-xl">
+            Tốt nghiệp Đại học Bách Khoa Hà Nội năm 1968. Nguyên Kỹ sư trưởng Tổng cục Địa chính. Năm 2002, khởi xướng và chủ trì việc trùng tu Từ Đường Nguyễn Đức tại Tiên Điền, đồng thời hoàn thành quy hoạch Nghĩa Trang Gia Tộc rộng 1.200 m².
+          </p>
+</div>
+<!-- Immediate Family Quick Grid -->
+<div>
+<h4 class="font-label-sm text-label-sm text-secondary-fixed-variant uppercase tracking-wider mb-2 flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-xs">family_restroom</span>
+            Quan Hệ Trực Hệ
+          </h4>
+<div class="space-y-2">
+<!-- Spouse Info -->
+<div class="flex items-center justify-between p-2.5 rounded-xl bg-surface-container-low">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed/50 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-base">favorite</span>
+</div>
+<div>
+<span class="font-label-sm text-[10px] text-on-surface-variant uppercase block">Chánh Phối</span>
+<p class="font-title-sm text-title-sm text-on-surface">Vũ Thị Nguyệt (1949 – Đang sống)</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-xs">Cưới 1971</span>
+</div>
+<!-- Children summary -->
+<div class="p-2.5 rounded-xl bg-surface-container-low">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-sm text-[10px] text-on-surface-variant uppercase font-semibold">Danh Sách Con (Đời IV)</span>
+<span class="font-label-sm text-xs text-primary font-bold">3 Người</span>
+</div>
+<div class="space-y-1.5">
+<div class="flex items-center justify-between text-body-sm font-body-sm bg-surface-container-lowest px-2.5 py-1.5 rounded-lg">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="font-semibold text-on-surface">1. Nguyễn Đức Trọng</span>
+<span class="text-on-surface-variant text-xs">(1973 • Trưởng Nam)</span>
+</div>
+<span class="text-tertiary text-xs font-medium">Hà Nội</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm bg-surface-container-lowest px-2.5 py-1.5 rounded-lg">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="font-semibold text-on-surface">2. Nguyễn Đức Vinh</span>
+<span class="text-on-surface-variant text-xs">(1976 • Thứ Nam)</span>
+</div>
+<span class="text-tertiary text-xs font-medium">Đà Nẵng</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm bg-surface-container-lowest px-2.5 py-1.5 rounded-lg">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-semibold text-on-surface">3. Nguyễn Thùy Chi</span>
+<span class="text-on-surface-variant text-xs">(1982 • Út Nữ)</span>
+</div>
+<span class="text-tertiary text-xs font-medium">Hà Nội</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Archival Photos & Artifacts -->
+<div>
+<div class="flex items-center justify-between mb-2">
+<h4 class="font-label-sm text-label-sm text-secondary-fixed-variant uppercase tracking-wider flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-xs">photo_library</span>
+              Tư Liệu &amp; Bút Tích
+            </h4>
+<span class="font-label-sm text-xs text-primary cursor-pointer hover:underline">Xem tất cả (8)</span>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<div class="aspect-square rounded-lg overflow-hidden bg-surface-container-high group relative cursor-pointer">
+<img class="w-full h-full object-cover transition-transform group-hover:scale-105" data-alt="Ảnh tư liệu đại lễ khánh thành nhà thờ tổ Nguyễn Đức năm 2002 cả dòng họ tề tựu trang nghiêm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8kV_6-1ivAue70uPXYOY9wv9Pa-PAAk2pGsyKlKleD5ezZbe4TWcoEhZhGrF2Pqiigw4QO_trN8-r4mbe-k5N4uq7s9gfVKGO4yl6o8JnRC2qLrczPUSRX4IfbDytYB7pKB2trMdgOKUmrgevpTX_VyOVFurv85g2ojA0Gm-ns1YI3Hh2sjvf5e8mHvkps_2psBUyNdTOLo_BJ0gD9DRJQ8KYQSmpd3WB6cVTruY84KQRs52WmeYx">
+</div>
+<div class="aspect-square rounded-lg overflow-hidden bg-surface-container-high group relative cursor-pointer">
+<img class="w-full h-full object-cover transition-transform group-hover:scale-105" data-alt="Bút tích gia phả chữ Nôm và chữ Quốc Ngữ cổ được viết cẩn trọng trên giấy bản ngà mực nho" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDs3LZZdLBvFq6q-NY2FmRZgpvCrkd6h0VyXJG10b83tgPCzU2cGPRX1aVoCUnxMzK9kq4Vziu09ekxMu9sYUvEja_JY7-ogPUDRAQpBaqibdsh_BgSV-X3FtI5594TMsRBvKxCThPrmsFUcGt_dpFDlefka_CUh9rbL87XwePvp_DYy0VpGlitIGD_jlty9dzxn4Yz9AhQp0-YN8zkd0ZNrq09GX37WmHpgRe0qi2SnH1sXIRtNFzX">
+</div>
+<div class="aspect-square rounded-lg overflow-hidden bg-surface-container-high group relative cursor-pointer">
+<img class="w-full h-full object-cover transition-transform group-hover:scale-105" data-alt="Hình ảnh bài vị và lư đồng cổ truyền thế hệ đời trước đặt tại chính điện từ đường" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIWKPOMkMvVxkdbrbiLOncJmBYzY6waSnVr2R2D_QRUXUjYJF8pwkfl2xNjgYoQjgB6Y_ZAHqcPq2y-O2Ird5L3ikXpQ5JbUjov9074-w5HgCNL-DlbJiQORpF70Ir_2kR9IE_bEmHyUlFJBDzQUO8VKdtpYsPNdkJ4gC4_HRpWCqX5seeCjqKJw9MGaI3LI_r4ZvZWHXJ_b39gxZ-XFykV8PHqqmpIYq_FJhW7GI0mY9CKzdiF9wd">
+</div>
+</div>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="p-space-md border-t border-surface-container-high bg-surface-container-low/70 flex items-center gap-2">
+<button class="flex-1 py-2 px-3 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-base">edit</span>
+<span>Chỉnh Sửa Hồ Sơ</span>
+</button>
+<button class="py-2 px-3 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-md text-label-md transition-colors flex items-center justify-center gap-1 shadow-2xs" type="button">
+<span class="material-symbols-outlined text-base">person_add</span>
+<span>Thêm Con</span>
+</button>
+</div>
+</aside>
+</div>
+</div>
+<script>
+  let currentZoom = 1.0;
+  const viewport = document.getElementById('canvasViewport');
+  const slider = document.getElementById('zoomSlider');
+  const label = document.getElementById('zoomPercentLabel');
+  const lodDetailedBtn = document.getElementById('lodDetailedBtn');
+  const lodOverviewBtn = document.getElementById('lodOverviewBtn');
+
+  function updateZoom(newZoom) {
+    currentZoom = Math.max(0.3, Math.min(1.5, newZoom));
+    if (viewport) {
+      viewport.style.transform = `scale(${currentZoom})`;
+    }
+    const percent = Math.round(currentZoom * 100);
+    if (slider) slider.value = percent;
+    if (label) label.textContent = `${percent}%`;
+
+    // Adaptive LOD Auto Toggle based on zoom depth
+    if (currentZoom <= 0.45) {
+      highlightLODButton('overview');
+    } else {
+      highlightLODButton('detailed');
+    }
+  }
+
+  function adjustZoom(delta) {
+    updateZoom(currentZoom + delta);
+  }
+
+  function onSliderChange(val) {
+    updateZoom(val / 100);
+  }
+
+  function resetZoom() {
+    updateZoom(1.0);
+  }
+
+  function fitScreen() {
+    updateZoom(0.65);
+  }
+
+  function setLODMode(mode) {
+    if (mode === 'overview') {
+      updateZoom(0.35);
+      highlightLODButton('overview');
+    } else {
+      updateZoom(1.0);
+      highlightLODButton('detailed');
+    }
+  }
+
+  function highlightLODButton(mode) {
+    if (!lodDetailedBtn || !lodOverviewBtn) return;
+    if (mode === 'detailed') {
+      lodDetailedBtn.className = "px-2.5 py-1 rounded-md bg-surface-container-lowest text-primary font-label-sm text-label-sm shadow-xs flex items-center gap-1";
+      lodOverviewBtn.className = "px-2.5 py-1 rounded-md text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm flex items-center gap-1";
+    } else {
+      lodOverviewBtn.className = "px-2.5 py-1 rounded-md bg-surface-container-lowest text-primary font-label-sm text-label-sm shadow-xs flex items-center gap-1";
+      lodDetailedBtn.className = "px-2.5 py-1 rounded-md text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm flex items-center gap-1";
+    }
+  }
+
+  // Interactive member data mapper for inspector drawer
+  const members = {
+    'nguyen-duc-hung': {
+      name: 'Nguyễn Đức Hưng',
+      title: 'Tự: Phúc Khang • Trưởng Chi',
+      gen: 'Chi Trưởng • Đời III',
+      born: 'Sinh ngày: 15/08/1945 (Ất Dậu) • 79 tuổi'
+    },
+    'nguyen-duc-tinh': {
+      name: 'Nguyễn Đức Tĩnh',
+      title: 'Khởi Tổ Tiên Điền • Thần Tổ',
+      gen: 'Thủy Tổ • Đời I',
+      born: '1892 – 1968 (Hưởng thọ 76 tuổi)'
+    },
+    'tran-thi-mui': {
+      name: 'Trần Thị Mùi',
+      title: 'Chánh Thất Phu Nhân',
+      gen: 'Chánh Thất • Đời I',
+      born: '1895 – 1974 (Hưởng thọ 79 tuổi)'
+    },
+    'nguyen-duc-khang': {
+      name: 'Nguyễn Đức Khang',
+      title: 'Trưởng Nam Chi Đại Tôn',
+      gen: 'Chi Trưởng • Đời II',
+      born: '1918 – 1989 (Hưởng thọ 71 tuổi)'
+    },
+    'nguyen-thi-mai': {
+      name: 'Nguyễn Thị Mai',
+      title: 'Trưởng Nữ Chi Trưởng',
+      gen: 'Chi Trưởng • Đời III',
+      born: '1948 – 2021 (Hưởng thọ 73 tuổi)'
+    },
+    'nguyen-duc-cuong': {
+      name: 'Nguyễn Đức Cường',
+      title: 'Thứ Nam Chi Trưởng',
+      gen: 'Chi Trưởng • Đời III',
+      born: '1952 • 72 tuổi (Cư trú TP.HCM)'
+    }
+  };
+
+  function selectMember(id) {
+    const data = members[id];
+    if (!data) return;
+
+    const drawerName = document.getElementById('drawerName');
+    if (drawerName) drawerName.textContent = data.name;
+
+    // Highlight selected card visually
+    document.querySelectorAll('.member-node').forEach(el => {
+      el.classList.remove('ring-2', 'ring-primary', 'bg-primary/5');
+    });
+    
+    // Smooth scroll drawer to top if needed
+    const drawer = document.getElementById('memberDrawer');
+    if (drawer) {
+      drawer.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+</script></main><footer class="fixed bottom-0 left-64 right-0 h-10 bg-surface/95 backdrop-blur-md shadow-[0_-1px_6px_rgba(0,0,0,0.03)] z-30 flex items-center justify-between px-space-lg text-on-surface-variant font-label-md text-label-md"><div class="flex items-center gap-space-lg"><span>Tổng nhân khẩu: <strong class="text-primary font-semibold">342 người</strong></span><span>Quy mô: <strong class="text-tertiary font-semibold">7 thế hệ</strong></span><span class="hidden sm:inline">Đinh tráng: <strong class="text-on-surface font-semibold">188</strong> • Nữ duệ: <strong class="text-on-surface font-semibold">154</strong></span></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-1.5 bg-surface-container-low px-2 py-0.5 rounded-lg"><span class="material-symbols-outlined text-xs">zoom_in</span><span>Tỉ lệ: <strong class="text-on-surface font-semibold">100%</strong></span></div><span class="text-xs hidden md:inline text-on-surface-variant/80">© 2024 Đại Việt Phả Ký Toàn Thư</span></div></footer></div></body></html>

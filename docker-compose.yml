@@ -1,0 +1,137 @@
+# Chạy đủ bộ: Postgres + genealogy-api + genealogy-web. Mô hình theo
+# ../fashion-web/docker-compose.yml (bỏ phần MinIO/GHCR vì dự án này lưu ảnh
+# đại diện trên đĩa và chưa có CI đẩy image).
+#
+#   cp .env.example .env     # điền POSTGRES_PASSWORD và JWT_SECRET (bắt buộc)
+#   docker compose up --build -d
+#
+# Chỉ frontend publish port ra máy chủ (mặc định 127.0.0.1:3000) — phía trước
+# nên có reverse proxy (nginx...) lo HTTPS; khi đó đặt COOKIE_SECURE=true và
+# FRONTEND_ORIGIN=https://<domain> trong .env. API và Postgres KHÔNG publish
+# port nào; web gọi API qua tên service ("api") trong mạng nội bộ, browser chỉ
+# nói chuyện với web (/api/* và /uploads/* được web proxy sang API).
+#
+# 2 network:
+#   - "public_net": web + api — chỉ để có đường ra Internet (API gửi mail SMTP
+#     quên mật khẩu). Không service nào ngoài web publish port.
+#   - "private_net" (internal: true, không ra Internet): db + api + web nói
+#     chuyện với nhau. db chỉ nằm trên mạng này.
+#
+# Image: có `build:` nên chạy được ngay từ source; có thêm `image:` để khi sau
+# này CI build + push lên một registry thì chỉ cần đặt API_IMAGE/WEB_IMAGE (+
+# *_IMAGE_TAG) trong .env rồi `docker compose pull` thay vì build tại server.
+# Backup cho postgres_data/uploads_data chưa làm.
+
+name: genealogy
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+
+  db:
+    image: postgres:18.6
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?thiếu POSTGRES_USER trong .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?thiếu POSTGRES_PASSWORD trong .env}
+      POSTGRES_DB: ${POSTGRES_DB:?thiếu POSTGRES_DB trong .env}
+    volumes:
+      # postgres:18+ đổi convention: mount ở /var/lib/postgresql (không phải
+      # .../data như bản 16) — image tự tạo thư mục con theo major version.
+      # Mount nhầm chỗ cũ sẽ crash-loop ngay lúc khởi động.
+      - postgres_data:/var/lib/postgresql
+    networks:
+      - private_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    logging: *default-logging
+
+  api:
+    build: ./genealogy-api
+    image: ${API_IMAGE:-genealogy-api}:${API_IMAGE_TAG:-latest}
+    environment:
+      # Mật khẩu nằm trong URL nên POSTGRES_PASSWORD chỉ nên dùng ký tự an toàn
+      # cho URL (chữ, số, "-", "_", ".") — xem .env.example.
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      JWT_SECRET: ${JWT_SECRET:?thiếu JWT_SECRET trong .env}
+      JWT_EXPIRE_MINUTES: ${JWT_EXPIRE_MINUTES:-60}
+      # Origin mà browser thật sự dùng để mở web — CORS và cookie dựa vào nó.
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:3000}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      UPLOAD_DIR: /app/uploads
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USERNAME: ${SMTP_USERNAME:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      SMTP_USE_TLS: ${SMTP_USE_TLS:-true}
+    volumes:
+      - uploads_data:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      # private_net là internal:true (không ra Internet) — api join thêm
+      # public_net để gửi được mail SMTP. Không publish port nào ở đây.
+      - private_net
+      - public_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    logging: *default-logging
+
+  web:
+    build:
+      context: ./genealogy-web
+      args:
+        # Với output "standalone", rewrites() của next.config.ts chỉ chạy 1 lần
+        # lúc `next build` và bị đóng băng vào image: đây phải là địa chỉ API
+        # TRONG mạng Docker (tên service "api"). Đổi giá trị này thì phải build
+        # lại (`docker compose up --build`).
+        API_BASE_URL: http://api:8000
+    image: ${WEB_IMAGE:-genealogy-web}:${WEB_IMAGE_TAG:-latest}
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "${FRONTEND_BIND:-127.0.0.1}:${FRONTEND_PORT:-3000}:3000"
+    networks:
+      - public_net
+      - private_net
+    restart: unless-stopped
+    healthcheck:
+      # "/" redirect sang /login khi chưa đăng nhập (middleware) — 3xx vẫn là sống.
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    logging: *default-logging
+
+networks:
+  # MTU mặc định 1500. Nếu hạ tầng mạng của server nhỏ hơn (vd 1492, như
+  # fashion-web đo được: `ping -M do -s 1472 <host>` báo "mtu = 1492"), gói lớn
+  # bị rớt âm thầm gây treo khi API gọi ra ngoài — đặt DOCKER_NETWORK_MTU=1492.
+  public_net:
+    driver_opts:
+      com.docker.network.driver.mtu: "${DOCKER_NETWORK_MTU:-1500}"
+  private_net:
+    internal: true
+    driver_opts:
+      com.docker.network.driver.mtu: "${DOCKER_NETWORK_MTU:-1500}"
+
+volumes:
+  postgres_data:
+  uploads_data:
