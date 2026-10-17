@@ -77,6 +77,12 @@ Mở `http://<máy>:3000/nhap-lieu`: bảng sửa trực tiếp từng ô (tự 
 là thêm con; ô trống = giữ nguyên, ô `-` = xoá; sai một dòng thì cả file không được nhập, có bước xem thử trước khi áp dụng).
 Cập nhật bản đang chạy: `docker compose up --build -d` (migration tự chạy khi API khởi động).
 
+### Sử ký dòng họ
+
+- **Sử ký** (`/su-ky`): bài viết viết bằng Markdown (nguồn gốc, thế thứ, **tộc ước/gia huấn**, nhân vật, sự kiện), kèm ảnh, ghim bài quan trọng, bản nháp chỉ quản trị viên thấy. Người được nhắc tới trong bài sẽ có mục “Được nhắc trong…” ở hồ sơ. **Dòng thời gian** của họ và **bài đệm** (chữ đệm từng đời; khi thêm con, quản trị viên được gợi ý chữ đệm của đời đó).
+- Thành viên đọc được bài đã đăng; khách chỉ đọc khi họ để chế độ công khai (khách thấy chữ, không thấy ảnh). HTML trong bài không bao giờ được chạy.
+- **Điện thoại**: nút ☰ ở góc trái thanh đầu trang mở menu đầy đủ.
+
 ### Ảnh, tài liệu và địa điểm
 
 - **Tư liệu & bút tích**: trong hồ sơ mỗi người (và mỗi địa điểm), admin tải ảnh JPEG/PNG/WebP hoặc PDF (≤ 10 MB). Hệ thống kiểm tra **nội dung file** (đổi đuôi không qua được) và tự tạo ảnh thu nhỏ. File nằm trong volume `uploads_data` (thư mục `media/`) — nhớ sao lưu cùng database. **Chỉ người đã đăng nhập vào đúng họ mới xem được**, kể cả khi họ để chế độ công khai.
