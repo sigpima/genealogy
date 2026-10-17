@@ -68,6 +68,13 @@ Mỗi service có cả `build:` lẫn `image:`. Khi CI build + push lên registr
   `docker compose up --build`.
 - Mạng của server có MTU nhỏ hơn 1500 (vd 1492) thì đặt `DOCKER_NETWORK_MTU=1492`.
 
+### Nhập liệu hàng loạt (trang **Nhập liệu**, dành cho admin)
+
+Mở `http://<máy>:3000/nhap-lieu`: bảng sửa trực tiếp từng ô (tự lưu), lọc theo đời/nhánh/"thiếu thông tin", thanh tiến độ, nút
+**Tách** cho dòng gộp kiểu "Vô Danh 3 Vị", **Xuất CSV** / **Nhập CSV** (mở bằng Excel; dòng có cột `id` là cập nhật, không có `id`
+là thêm con; ô trống = giữ nguyên, ô `-` = xoá; sai một dòng thì cả file không được nhập, có bước xem thử trước khi áp dụng).
+Cập nhật bản đang chạy: `docker compose up --build -d` (migration tự chạy khi API khởi động).
+
 ### Nạp cây gia phả từ file JSON
 
 ```bash
