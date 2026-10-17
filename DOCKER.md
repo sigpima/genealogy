@@ -77,6 +77,11 @@ Mở `http://<máy>:3000/nhap-lieu`: bảng sửa trực tiếp từng ô (tự 
 là thêm con; ô trống = giữ nguyên, ô `-` = xoá; sai một dòng thì cả file không được nhập, có bước xem thử trước khi áp dụng).
 Cập nhật bản đang chạy: `docker compose up --build -d` (migration tự chạy khi API khởi động).
 
+### Thống kê
+
+- **Thống kê** (`/thong-ke`): nhân khẩu, số đời, người mỗi đời và mỗi chi, giới tính, còn sống/đã mất, tuổi thọ, thập niên sinh, số con, dòng dài nhất, chữ đệm và tên phổ biến. **Bấm vào một cột để xem danh sách người tương ứng** (mở trang Tìm kiếm đã lọc sẵn).
+- **Độ đầy đủ dữ liệu**: bao nhiêu % người đã có giới tính, năm sinh, quê quán, ảnh…; admin bấm **Bổ sung** để mở bảng Nhập liệu đã lọc sẵn những người còn thiếu.
+
 ### Sử ký dòng họ
 
 - **Sử ký** (`/su-ky`): bài viết viết bằng Markdown (nguồn gốc, thế thứ, **tộc ước/gia huấn**, nhân vật, sự kiện), kèm ảnh, ghim bài quan trọng, bản nháp chỉ quản trị viên thấy. Người được nhắc tới trong bài sẽ có mục “Được nhắc trong…” ở hồ sơ. **Dòng thời gian** của họ và **bài đệm** (chữ đệm từng đời; khi thêm con, quản trị viên được gợi ý chữ đệm của đời đó).
