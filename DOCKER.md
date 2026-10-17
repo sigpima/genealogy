@@ -77,6 +77,12 @@ Mở `http://<máy>:3000/nhap-lieu`: bảng sửa trực tiếp từng ô (tự 
 là thêm con; ô trống = giữ nguyên, ô `-` = xoá; sai một dòng thì cả file không được nhập, có bước xem thử trước khi áp dụng).
 Cập nhật bản đang chạy: `docker compose up --build -d` (migration tự chạy khi API khởi động).
 
+### Thiệp mời online
+
+- Trong **Lịch giỗ**, chọn ngày có sự kiện → **Thiệp mời** → tạo thiệp cho ngày đó (kèm lời mời). Bạn nhận **một link chung** để dán vào nhóm Zalo/email, hoặc **link riêng** cho từng người (nhập mỗi tên một dòng).
+- Người nhận mở link **không cần đăng nhập**: thấy ngày dương + âm lịch, địa điểm (có nút chỉ đường), lời mời, rồi chọn *Tham dự / Không / Chưa chắc* và số người. Họ sửa được câu trả lời bằng cách mở lại link. Họ **không thấy tên người khác**, chỉ thấy tổng.
+- Admin xem ai đã trả lời, tổng số người đến, **tải danh sách CSV**, đóng nhận trả lời hoặc đặt hạn chót. Link là bí mật: ai có link đều trả lời được; xoá thiệp thì link chết.
+
 ### Thống kê
 
 - **Thống kê** (`/thong-ke`): nhân khẩu, số đời, người mỗi đời và mỗi chi, giới tính, còn sống/đã mất, tuổi thọ, thập niên sinh, số con, dòng dài nhất, chữ đệm và tên phổ biến. **Bấm vào một cột để xem danh sách người tương ứng** (mở trang Tìm kiếm đã lọc sẵn).
