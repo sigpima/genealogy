@@ -19,7 +19,11 @@ cp .env.example .env      # điền POSTGRES_PASSWORD và JWT_SECRET — thiếu
 docker compose up --build -d
 ```
 
-- Mở http://127.0.0.1:3000 trên chính máy này, hoặc `http://<IP máy>:3000` từ máy khác (đổi cổng bằng `FRONTEND_PORT`). Đăng ký tài khoản đầu tiên ngay trên web.
+- Mở http://127.0.0.1:3000 trên chính máy này, hoặc `http://<IP máy>:3000` từ máy khác (đổi cổng bằng `FRONTEND_PORT`).
+- **Tài khoản đầu tiên đăng ký trên một hệ thống trống tự động là quản trị viên (admin).** Những người đăng ký sau
+  mặc định ở trạng thái **chờ duyệt**: admin vào mục **Quản trị** (menu trái) để duyệt, đổi vai trò hoặc tạo tài khoản
+  trực tiếp, và đổi **Cài đặt** (đăng ký: cần duyệt / mở / đóng; xem gia phả: riêng tư / công khai chỉ xem). Chỉ admin
+  mới sửa được cây; thành viên chỉ xem. Khi nâng cấp từ bản cũ, mọi tài khoản đang có được chuyển thành admin.
 - Lần đầu mất vài phút để build image. Mỗi lần API khởi động nó tự chạy
   `alembic upgrade head`, nên schema luôn mới.
 - **Chỉ web publish port ra máy chủ** (mặc định `0.0.0.0`; trên server thật đặt `FRONTEND_BIND=127.0.0.1` rồi để reverse proxy trỏ vào). API và Postgres nằm
