@@ -13,3 +13,6 @@
 # Ảnh thử rời rạc (~25MB), tránh vô tình đưa vào lịch sử git.
 /*.png
 /*.jpeg
+
+# Bản sao lưu (chứa dữ liệu thật của dòng họ)
+/backups/

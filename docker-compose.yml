@@ -21,7 +21,7 @@
 # Image: có `build:` nên chạy được ngay từ source; có thêm `image:` để khi sau
 # này CI build + push lên một registry thì chỉ cần đặt API_IMAGE/WEB_IMAGE (+
 # *_IMAGE_TAG) trong .env rồi `docker compose pull` thay vì build tại server.
-# Backup cho postgres_data/uploads_data chưa làm.
+# Sao lưu: scripts/backup.sh (Postgres + uploads) và scripts/restore.sh, xem docs/SAO-LUU.md.
 
 name: genealogy
 
@@ -51,6 +51,10 @@ x-api-environment: &api-environment
   SMTP_PASSWORD: ${SMTP_PASSWORD:-}
   SMTP_FROM: ${SMTP_FROM:-}
   SMTP_USE_TLS: ${SMTP_USE_TLS:-true}
+  # Giới hạn tần suất đăng nhập/đăng ký... (xem DOCKER.md "Bảo mật & vận hành"). TRUSTED_PROXY_HOPS=1 chỉ khi
+  # có nginx/Caddy phía trước web và nó ghi đè X-Forwarded-For; để 0 nếu không (mặc định).
+  RATE_LIMIT_ENABLED: ${RATE_LIMIT_ENABLED:-true}
+  TRUSTED_PROXY_HOPS: ${TRUSTED_PROXY_HOPS:-0}
 
 services:
 

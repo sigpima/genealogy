@@ -50,6 +50,41 @@ FRONTEND_ORIGIN=https://<domain>
 COOKIE_SECURE=true
 ```
 
+### Bảo mật & vận hành
+
+- **HTTPS**: web chỉ nói HTTP; HTTPS và HSTS là việc của reverse proxy (HSTS qua HTTP là sai nên API/web không tự gửi). Ví dụ nginx:
+
+  ```nginx
+  server {
+    listen 443 ssl;
+    server_name gia-pha.example.com;
+    # ssl_certificate ... (certbot/Caddy tự lo)
+    client_max_body_size 25m;                      # ảnh/tài liệu tải lên
+    proxy_read_timeout 300s;                       # quyển phả PDF của họ lớn soạn lâu
+    location / {
+      proxy_pass http://127.0.0.1:3000;
+      proxy_set_header Host $host;
+      proxy_set_header X-Forwarded-For $remote_addr;   # GHI ĐÈ, không nối thêm: để API tin được địa chỉ này
+      proxy_set_header X-Forwarded-Proto $scheme;
+      add_header Strict-Transport-Security "max-age=31536000" always;
+    }
+  }
+  ```
+  rồi `.env`: `FRONTEND_BIND=127.0.0.1`, `FRONTEND_ORIGIN=https://gia-pha.example.com`, `COOKIE_SECURE=true`, **`TRUSTED_PROXY_HOPS=1`**.
+- **Giới hạn tần suất** (`RATE_LIMIT_ENABLED`, mặc định bật): đăng nhập (20 lần/5 phút mỗi địa chỉ; **8 lần sai/5 phút mỗi tài khoản**),
+  đăng ký (10/giờ), quên mật khẩu (5/giờ), trả lời thiệp (40/10 phút) → HTTP 429. Đo thực tế: proxy `/api` của Next.js **không** chuyển địa chỉ người
+  truy cập sang API, nên khi chưa có nginx phía trước, mọi người "cùng một địa chỉ" và giới hạn theo địa chỉ được nới ×5 để không chặn cả nhà
+  (giới hạn theo tài khoản mới là thứ chặn đoán mật khẩu). Bộ đếm nằm trong bộ nhớ của một tiến trình API (compose chạy đúng một) — chạy nhiều bản API thì mỗi bản đếm riêng.
+- **Header bảo mật**: API gửi `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`; web gửi thêm `Permissions-Policy` và
+  (bản production) `Content-Security-Policy`.
+- **Sao lưu/khôi phục**: `scripts/backup.sh`, `scripts/restore.sh`, hướng dẫn và nhật ký diễn tập trong [docs/SAO-LUU.md](docs/SAO-LUU.md).
+- **Xuất toàn bộ dữ liệu**: trang **Xuất bản** (admin) → "Tải dữ liệu JSON" (`GET /api/export/data.json`; không có mật khẩu/token).
+
+### Quyền riêng tư theo trường
+
+Trang **Quản trị** (admin) → "Quyền riêng tư": mỗi trường (điện thoại, email, nơi ở, ghi chú, nơi an nghỉ, ảnh, quê quán) đặt mức xem
+**Chỉ admin / Thành viên / Công khai** (công khai = cả khách vào cây đang mở công khai). Mặc định giữ đúng như trước GĐ11.
+
 ### Dùng image build sẵn thay vì build tại server
 
 Mỗi service có cả `build:` lẫn `image:`. Khi CI build + push lên registry, đặt trong
