@@ -77,6 +77,12 @@ Mở `http://<máy>:3000/nhap-lieu`: bảng sửa trực tiếp từng ô (tự 
 là thêm con; ô trống = giữ nguyên, ô `-` = xoá; sai một dòng thì cả file không được nhập, có bước xem thử trước khi áp dụng).
 Cập nhật bản đang chạy: `docker compose up --build -d` (migration tự chạy khi API khởi động).
 
+### Tìm kiếm, chi phái, thống kê
+
+- **Tìm kiếm** (`/tim-kiem`, hoặc "Tìm nâng cao" trong ô tìm trên cùng): gõ không dấu cũng được, tìm cả vợ/chồng, lọc theo đời/chi/năm sinh/quê/giới tính/còn sống-đã mất, gợi ý khi gõ sai.
+- **Chi phái** (`/chi-phai`): admin tạo chi bằng cách chọn **trưởng chi**; cả nhánh con cháu của người đó thuộc chi (chi con ghi đè chi cha). Cây hiện màu chi trên thẻ, kèm số liệu từng chi.
+- Tìm kiếm làm trong bộ nhớ nên **không cần cài thêm extension Postgres** (`unaccent`, `pg_trgm`). Cập nhật: `docker compose up --build -d` (migration tự chạy).
+
 ### Nạp cây gia phả từ file JSON
 
 ```bash
