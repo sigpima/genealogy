@@ -1,6 +1,6 @@
 [submodule "genealogy-api"]
 	path = genealogy-api
-	url = ./genealogy-api
+	url = git@sigpima-github-push:sigpima/genealogy-api.git
 [submodule "genealogy-web"]
 	path = genealogy-web
-	url = ./genealogy-web
+	url = git@sigpima-github-push:sigpima/genealogy-web.git
