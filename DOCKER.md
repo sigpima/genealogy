@@ -116,8 +116,12 @@ docker compose up --build api          # hoặc chạy luôn API trong Docker (1
 - Test dựng schema bằng chính các migration (`alembic upgrade head`), xoá sạch bảng
   trước mỗi test, và **từ chối chạy trên database có tên không kết thúc bằng `_test`**.
   Đổi đích bằng biến `TEST_DATABASE_URL`.
+- **Một file `.env` cho cả hai cách chạy**: `genealogy-api/.env` (copy từ `.env.example`) vừa được compose đọc để thay `${...}`,
+  vừa được app chạy ngoài Docker (`uv run uvicorn`, `alembic`, `scripts/*.py`) đọc. Các biến `POSTGRES_*`, `JWT_SECRET`... trùng tên
+  với `../.env.example` (bản deploy). Trong Docker, `api` nối thẳng `db:5432`; ngoài Docker, app nối `127.0.0.1:${POSTGRES_PORT}`
+  (mặc định 15432). Biến môi trường của tiến trình luôn thắng file `.env`.
 - Không dùng cổng 5432 (hay bị Postgres cài sẵn trên máy chiếm): dev 15432, test 55432;
-  đổi bằng `DB_PORT` / `TEST_DB_PORT` / `API_PORT`.
+  đổi bằng `POSTGRES_PORT` / `TEST_DB_PORT` / `API_PORT`.
 - Service `api` còn tham gia network `genealogy_dev` (tên cố định) để compose của
   frontend gọi được `http://api:8000`.
 
