@@ -31,6 +31,27 @@ x-logging: &default-logging
     max-size: "10m"
     max-file: "3"
 
+x-api-environment: &api-environment
+  # Truyền từng phần thay vì một DATABASE_URL: API tự dựng URL và mã hoá
+  # mật khẩu, nên mật khẩu chứa @ : / # ? ... vẫn dùng được.
+  POSTGRES_HOST: db
+  POSTGRES_PORT: 5432
+  POSTGRES_USER: ${POSTGRES_USER}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  POSTGRES_DB: ${POSTGRES_DB}
+  JWT_SECRET: ${JWT_SECRET:?thiếu JWT_SECRET trong .env}
+  JWT_EXPIRE_MINUTES: ${JWT_EXPIRE_MINUTES:-60}
+  # Origin mà browser thật sự dùng để mở web — CORS và cookie dựa vào nó.
+  FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:3000}
+  COOKIE_SECURE: ${COOKIE_SECURE:-false}
+  UPLOAD_DIR: /app/uploads
+  SMTP_HOST: ${SMTP_HOST:-}
+  SMTP_PORT: ${SMTP_PORT:-587}
+  SMTP_USERNAME: ${SMTP_USERNAME:-}
+  SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+  SMTP_FROM: ${SMTP_FROM:-}
+  SMTP_USE_TLS: ${SMTP_USE_TLS:-true}
+
 services:
 
   db:
@@ -58,26 +79,7 @@ services:
   api:
     build: ./genealogy-api
     image: ${API_IMAGE:-genealogy-api}:${API_IMAGE_TAG:-latest}
-    environment:
-      # Truyền từng phần thay vì một DATABASE_URL: API tự dựng URL và mã hoá
-      # mật khẩu, nên mật khẩu chứa @ : / # ? ... vẫn dùng được.
-      POSTGRES_HOST: db
-      POSTGRES_PORT: 5432
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      JWT_SECRET: ${JWT_SECRET:?thiếu JWT_SECRET trong .env}
-      JWT_EXPIRE_MINUTES: ${JWT_EXPIRE_MINUTES:-60}
-      # Origin mà browser thật sự dùng để mở web — CORS và cookie dựa vào nó.
-      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:3000}
-      COOKIE_SECURE: ${COOKIE_SECURE:-false}
-      UPLOAD_DIR: /app/uploads
-      SMTP_HOST: ${SMTP_HOST:-}
-      SMTP_PORT: ${SMTP_PORT:-587}
-      SMTP_USERNAME: ${SMTP_USERNAME:-}
-      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
-      SMTP_FROM: ${SMTP_FROM:-}
-      SMTP_USE_TLS: ${SMTP_USE_TLS:-true}
+    environment: *api-environment
     volumes:
       - uploads_data:/app/uploads
     depends_on:
@@ -95,6 +97,22 @@ services:
       timeout: 5s
       retries: 3
       start_period: 20s
+    logging: *default-logging
+
+  # Hourly reminders (GĐ5): notifies people before a giỗ/event (in the web app and, when SMTP_HOST is set, by email).
+  # Same image and settings as the api; idempotent, so restarts and overlapping runs never duplicate a reminder.
+  worker:
+    build: ./genealogy-api
+    image: ${API_IMAGE:-genealogy-api}:${API_IMAGE_TAG:-latest}
+    command: ["python", "scripts/run_reminders.py", "--interval", "3600"]
+    environment: *api-environment
+    depends_on:
+      api:
+        condition: service_healthy  # the api applies the migrations the worker's tables come from
+    networks:
+      - private_net
+      - public_net  # SMTP
+    restart: unless-stopped
     logging: *default-logging
 
   web:

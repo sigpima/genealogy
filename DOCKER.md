@@ -77,6 +77,13 @@ Mở `http://<máy>:3000/nhap-lieu`: bảng sửa trực tiếp từng ô (tự 
 là thêm con; ô trống = giữ nguyên, ô `-` = xoá; sai một dòng thì cả file không được nhập, có bước xem thử trước khi áp dụng).
 Cập nhật bản đang chạy: `docker compose up --build -d` (migration tự chạy khi API khởi động).
 
+### Lịch giỗ, sự kiện, link lịch điện thoại, nhắc việc
+
+- **Lịch giỗ** (`/lich`): luôn hiện cả ngày dương và ngày âm. **Giỗ tự tính** từ ngày mất âm lịch của từng người (không lưu trùng); người chỉ có ngày mất **dương lịch không có năm** thì chưa tính được và được báo ở cuối lịch. Admin thêm **sự kiện** (họp họ, cưới hỏi, giỗ Tổ…) theo âm hoặc dương, một lần hoặc lặp hằng năm.
+- **Link lịch cho điện thoại**: admin bấm *Bật link lịch*, cả họ chép link rồi “Đăng ký lịch qua URL” trong Google/Apple Calendar. Đây là **link bí mật** (ai có link xem được lịch giỗ); *Tạo link mới* cắt quyền các điện thoại cũ, *Tắt link* gỡ hẳn.
+- **Nhắc việc**: service **`worker`** trong `docker-compose.yml` chạy mỗi giờ, tạo thông báo (chuông trên thanh đầu trang) trước giỗ/sự kiện 7 và 1 ngày — mỗi người tự chọn ở trang lịch — và gửi email nếu đã đặt `SMTP_HOST`. Chạy lại nhiều lần không bị nhắc trùng. Xem log: `docker compose logs -f worker`; chạy tay một lần: `docker compose exec worker python scripts/run_reminders.py`.
+- Âm lịch tính theo **múi giờ Việt Nam (UTC+7)**, không dùng bảng của lịch Trung Quốc (hai bên lệch nhau ở vài năm). Nếu gặp năm nghi ngờ, đối chiếu với lịch vạn niên của gia đình.
+
 ### Yêu cầu cập nhật và nhật ký thay đổi
 
 - Thành viên **không sửa trực tiếp**: họ mở hồ sơ một người → **Đề xuất chỉnh sửa** (sửa thông tin / thêm con / báo sai). Admin vào **Yêu cầu** xem bản cũ – bản mới rồi **Duyệt** (áp dụng ngay) hoặc **Từ chối** (kèm lý do). Người gửi xem kết quả ở cùng trang.
