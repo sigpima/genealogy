@@ -77,6 +77,12 @@ Mở `http://<máy>:3000/nhap-lieu`: bảng sửa trực tiếp từng ô (tự 
 là thêm con; ô trống = giữ nguyên, ô `-` = xoá; sai một dòng thì cả file không được nhập, có bước xem thử trước khi áp dụng).
 Cập nhật bản đang chạy: `docker compose up --build -d` (migration tự chạy khi API khởi động).
 
+### Ảnh, tài liệu và địa điểm
+
+- **Tư liệu & bút tích**: trong hồ sơ mỗi người (và mỗi địa điểm), admin tải ảnh JPEG/PNG/WebP hoặc PDF (≤ 10 MB). Hệ thống kiểm tra **nội dung file** (đổi đuôi không qua được) và tự tạo ảnh thu nhỏ. File nằm trong volume `uploads_data` (thư mục `media/`) — nhớ sao lưu cùng database. **Chỉ người đã đăng nhập vào đúng họ mới xem được**, kể cả khi họ để chế độ công khai.
+- **Địa điểm** (`/dia-diem`): nhà thờ họ, từ đường, lăng mộ, nghĩa trang, đền, có bản đồ OpenStreetMap (trình duyệt cần ra Internet để tải bản đồ nền), nút **Chỉ đường** (Google Maps), người trông coi, lưu ý khi thăm, danh sách người an nghỉ. Trong hồ sơ, admin chọn **Nơi an nghỉ** và vị trí mộ.
+- **Chuyển dữ liệu cũ**: nếu trước đây bạn nhập chữ vào ô “Mộ phần”, vào `/dia-diem` → *Chuyển từ ô “Mộ phần” cũ* → *Xem trước* → *Áp dụng*: hệ thống gom các ô giống nhau thành địa điểm. Ô cũ được giữ nguyên.
+
 ### Lịch giỗ, sự kiện, link lịch điện thoại, nhắc việc
 
 - **Lịch giỗ** (`/lich`): luôn hiện cả ngày dương và ngày âm. **Giỗ tự tính** từ ngày mất âm lịch của từng người (không lưu trùng); người chỉ có ngày mất **dương lịch không có năm** thì chưa tính được và được báo ở cuối lịch. Admin thêm **sự kiện** (họp họ, cưới hỏi, giỗ Tổ…) theo âm hoặc dương, một lần hoặc lặp hằng năm.
