@@ -26,7 +26,9 @@ docker compose up --build -d
   trống tự thành superadmin (và một họ mặc định được tạo). Người đăng ký sau vào họ họ chọn (xem `/t/<tên-họ>` bên
   dưới) và mặc định **chờ admin của họ đó duyệt**. Admin vào mục **Quản trị** để duyệt/tạo người dùng và đổi cài đặt
   (đăng ký: cần duyệt/mở/đóng; xem: riêng tư/công khai) **của họ mình**.
-- **Chưa có trang web cho superadmin** — tạo họ, tạo admin cho họ, đổi vai trò làm bằng dòng lệnh (xem mục "Quản lý các họ").
+- **Trang cho superadmin**: `http://<máy>:3000/he-thong` (mục "Các họ" ở menu trái) — xem danh sách họ, tạo họ kèm admin (mật khẩu tạm hiện một lần), đổi
+  tên/slug, và chuyển sang xem/quản trị một họ (có ô chọn họ ở thanh trên khi có từ hai họ). Dòng lệnh (mục "Quản lý các họ") vẫn dùng được, và là cách duy nhất để đặt
+  thêm superadmin. **Ảnh đại diện chỉ hiện với người được xem họ đó** (đăng nhập đúng họ, superadmin, hoặc họ đang công khai).
 - Lần đầu mất vài phút để build image. Mỗi lần API khởi động nó tự chạy
   `alembic upgrade head`, nên schema luôn mới.
 - **Chỉ web publish port ra máy chủ** (mặc định `0.0.0.0`; trên server thật đặt `FRONTEND_BIND=127.0.0.1` rồi để reverse proxy trỏ vào). API và Postgres nằm
@@ -82,7 +84,7 @@ docker compose cp path/to/tree.json api:/tmp/tree.json
 docker compose exec api python scripts/seed_members.py /tmp/tree.json
 ```
 
-### Quản lý các họ (thay cho trang superadmin, chưa làm)
+### Quản lý các họ bằng dòng lệnh (song song với trang `/he-thong`)
 
 Chạy trong container API (hoặc `uv run python scripts/manage.py ...` trong `genealogy-api/`):
 
