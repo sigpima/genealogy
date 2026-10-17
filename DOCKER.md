@@ -19,10 +19,10 @@ cp .env.example .env      # điền POSTGRES_PASSWORD và JWT_SECRET — thiếu
 docker compose up --build -d
 ```
 
-- Mở http://127.0.0.1:3000 (đổi bằng `FRONTEND_PORT`). Đăng ký tài khoản đầu tiên ngay trên web.
+- Mở http://127.0.0.1:3000 trên chính máy này, hoặc `http://<IP máy>:3000` từ máy khác (đổi cổng bằng `FRONTEND_PORT`). Đăng ký tài khoản đầu tiên ngay trên web.
 - Lần đầu mất vài phút để build image. Mỗi lần API khởi động nó tự chạy
   `alembic upgrade head`, nên schema luôn mới.
-- **Chỉ web publish port ra máy chủ** (mặc định `127.0.0.1`). API và Postgres nằm
+- **Chỉ web publish port ra máy chủ** (mặc định `0.0.0.0`; trên server thật đặt `FRONTEND_BIND=127.0.0.1` rồi để reverse proxy trỏ vào). API và Postgres nằm
   trong mạng nội bộ; browser chỉ nói chuyện với web, web proxy `/api/*` và
   `/uploads/*` sang API. Muốn xem docs của API thì dùng compose của backend (mục 2).
 - Mạng: `private_net` (`internal: true`, không ra Internet) cho db + api + web;
@@ -33,9 +33,10 @@ docker compose up --build -d
 
 ### Đặt sau reverse proxy HTTPS
 
-Cho nginx của máy chủ trỏ vào `127.0.0.1:${FRONTEND_PORT}`, rồi trong `.env`:
+Đặt `FRONTEND_BIND=127.0.0.1` (để chỉ proxy gọi được), cho nginx của máy chủ trỏ vào `127.0.0.1:${FRONTEND_PORT}`, rồi trong `.env`:
 
 ```
+FRONTEND_BIND=127.0.0.1
 FRONTEND_ORIGIN=https://<domain>
 COOKIE_SECURE=true
 ```
@@ -92,7 +93,7 @@ docker compose up --build api          # hoặc chạy luôn API trong Docker (1
 ```bash
 (cd genealogy-api && docker compose up -d --build --wait api)   # API trước
 cd genealogy-web
-docker compose up --build web                # bản production, 127.0.0.1:3000
+docker compose up --build web                # bản production, 0.0.0.0:3000 (đổi bằng WEB_BIND)
 docker compose --profile dev up web-dev      # bản dev, hot reload (lần đầu `npm ci` mất vài phút)
 ```
 

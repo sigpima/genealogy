@@ -5,8 +5,9 @@
 #   cp .env.example .env     # điền POSTGRES_PASSWORD và JWT_SECRET (bắt buộc)
 #   docker compose up --build -d
 #
-# Chỉ frontend publish port ra máy chủ (mặc định 127.0.0.1:3000) — phía trước
-# nên có reverse proxy (nginx...) lo HTTPS; khi đó đặt COOKIE_SECURE=true và
+# Chỉ frontend publish port ra máy chủ, mặc định nghe 0.0.0.0:3000 (mở được từ
+# máy khác trong mạng). Khi đưa lên server thật thì nên đặt FRONTEND_BIND=127.0.0.1
+# và để reverse proxy (nginx...) lo HTTPS; khi đó đặt COOKIE_SECURE=true và
 # FRONTEND_ORIGIN=https://<domain> trong .env. API và Postgres KHÔNG publish
 # port nào; web gọi API qua tên service ("api") trong mạng nội bộ, browser chỉ
 # nói chuyện với web (/api/* và /uploads/* được web proxy sang API).
@@ -110,7 +111,7 @@ services:
       api:
         condition: service_healthy
     ports:
-      - "${FRONTEND_BIND:-127.0.0.1}:${FRONTEND_PORT:-3000}:3000"
+      - "${FRONTEND_BIND:-0.0.0.0}:${FRONTEND_PORT:-3000}:3000"
     networks:
       - public_net
       - private_net
