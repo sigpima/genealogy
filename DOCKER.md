@@ -48,8 +48,9 @@ Mỗi service có cả `build:` lẫn `image:`. Khi CI build + push lên registr
 
 ### Lưu ý khi cấu hình
 
-- `POSTGRES_PASSWORD` nằm trong `DATABASE_URL` của API → chỉ dùng chữ, số, `-`, `_`, `.`
-  (ký tự như `@ : / # ?` làm hỏng URL).
+- `POSTGRES_PASSWORD` dùng ký tự nào cũng được: API nhận `POSTGRES_HOST/USER/PASSWORD/DB`
+  riêng và tự dựng URL kết nối (có mã hoá). Chỉ cần bọc trong nháy đơn trong `.env` nếu mật
+  khẩu có `$`, `#`, dấu nháy hay khoảng trắng.
 - Postgres 18 mount volume ở `/var/lib/postgresql` (không phải `.../data` như bản 16);
   mount sai chỗ sẽ crash-loop. Volume của bản compose cũ (Postgres 16, tên `db-data`)
   **không dùng lại được** — Postgres không mở thẳng dữ liệu khác major version; nếu có dữ
