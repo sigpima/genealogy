@@ -1,6 +1,6 @@
 # Kế hoạch tính năng — Website Gia phả
 
-Ngày soạn: 2026-10-17 · Trạng thái: **GĐ1 (phân quyền, quản trị, cài đặt site) đã làm xong** — các giai đoạn còn lại chờ bạn chốt các quyết định ở mục 3 (GĐ1 đã dùng các đề xuất mặc định của tôi: D1 một cây, D2 riêng tư mặc định, D4 duyệt đăng ký). GĐ0 (sao lưu) được bỏ qua vì dữ liệu hiện chỉ là demo.
+Ngày soạn: 2026-10-17 · Trạng thái: **đã làm xong: GĐ1 (phân quyền, quản trị, cài đặt site) và "đa gia đình" (quyết định D1 = nhiều gia đình: superadmin → mỗi họ một cây, một admin; trang quản lý của superadmin để sau, hiện dùng dòng lệnh)**. Các giai đoạn còn lại chờ bạn chốt các quyết định ở mục 3 (các quyết định D2, D4 dùng đề xuất mặc định). GĐ0 (sao lưu) được bỏ qua vì dữ liệu hiện chỉ là demo. — các giai đoạn còn lại chờ bạn chốt các quyết định ở mục 3 (GĐ1 đã dùng các đề xuất mặc định của tôi: D1 một cây, D2 riêng tư mặc định, D4 duyệt đăng ký). GĐ0 (sao lưu) được bỏ qua vì dữ liệu hiện chỉ là demo.
 
 Nguồn: (1) file PDF "Tính năng chi tiết website gia phả" của bạn; (2) menu trái do Stitch đề xuất
 (Sử ký dòng họ · Lăng mộ & nhà thờ · Lịch giỗ & sự kiện · Thống kê & phân tích); (3) hiện trạng code.
@@ -45,7 +45,7 @@ Quy ước độ lớn (ước lượng tương đối, **không phải cam kế
 
 | # | Câu hỏi | Đề xuất | Nếu chọn khác |
 |---|---|---|---|
-| **D1** | Một gia đình hay nhiều gia đình (SaaS)? | **Một cây cho mỗi lần triển khai** (như hiện tại) | Nhiều họ: thêm bảng `trees`, mọi bảng có `tree_id`, quyền theo từng cây — thêm khoảng một giai đoạn L và phải làm **trước** giai đoạn 1 |
+| **D1** | Một gia đình hay nhiều gia đình (SaaS)? | ~~Một cây cho mỗi lần triển khai~~ → **ĐÃ CHỌN: nhiều gia đình** (đã làm) | Nhiều họ: thêm bảng `trees`, mọi bảng có `tree_id`, quyền theo từng cây — thêm khoảng một giai đoạn L và phải làm **trước** giai đoạn 1 |
 | **D2** | Truy cập mặc định: riêng tư hay công khai? | **Riêng tư (phải đăng nhập)**, có công tắc "công khai chỉ xem" do admin bật | Công khai mặc định thì phải làm riêng tư từng trường sớm hơn |
 | **D3** | Mô hình quan hệ cha/mẹ | Giữ `parent_id` = **cha** (phụ hệ) + `mother_id` tuỳ chọn trỏ tới người vợ + cờ con nuôi | Đồ thị đầy đủ (bảng cha mẹ) linh hoạt hơn nhưng nặng hơn nhiều, ít họ cần |
 | **D4** | Đăng ký tài khoản | **Admin duyệt hoặc mời**, không để đăng ký tự do | Mở hẳn: rủi ro như mục 2.1 |

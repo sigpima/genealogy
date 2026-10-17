@@ -20,10 +20,13 @@ docker compose up --build -d
 ```
 
 - Mở http://127.0.0.1:3000 trên chính máy này, hoặc `http://<IP máy>:3000` từ máy khác (đổi cổng bằng `FRONTEND_PORT`).
-- **Tài khoản đầu tiên đăng ký trên một hệ thống trống tự động là quản trị viên (admin).** Những người đăng ký sau
-  mặc định ở trạng thái **chờ duyệt**: admin vào mục **Quản trị** (menu trái) để duyệt, đổi vai trò hoặc tạo tài khoản
-  trực tiếp, và đổi **Cài đặt** (đăng ký: cần duyệt / mở / đóng; xem gia phả: riêng tư / công khai chỉ xem). Chỉ admin
-  mới sửa được cây; thành viên chỉ xem. Khi nâng cấp từ bản cũ, mọi tài khoản đang có được chuyển thành admin.
+- **Nhiều họ (gia phả) trên một hệ thống.** Mỗi họ có **cây riêng**, **admin riêng**, người dùng và cài đặt riêng; dữ liệu
+  các họ **tách biệt hoàn toàn**. Vai trò: **superadmin** (chủ hệ thống, không thuộc họ nào, có quyền ở mọi họ),
+  **admin** (quản trị đúng một họ), **thành viên** (chỉ xem họ của mình). Tài khoản **đầu tiên** đăng ký trên hệ thống
+  trống tự thành superadmin (và một họ mặc định được tạo). Người đăng ký sau vào họ họ chọn (xem `/t/<tên-họ>` bên
+  dưới) và mặc định **chờ admin của họ đó duyệt**. Admin vào mục **Quản trị** để duyệt/tạo người dùng và đổi cài đặt
+  (đăng ký: cần duyệt/mở/đóng; xem: riêng tư/công khai) **của họ mình**.
+- **Chưa có trang web cho superadmin** — tạo họ, tạo admin cho họ, đổi vai trò làm bằng dòng lệnh (xem mục "Quản lý các họ").
 - Lần đầu mất vài phút để build image. Mỗi lần API khởi động nó tự chạy
   `alembic upgrade head`, nên schema luôn mới.
 - **Chỉ web publish port ra máy chủ** (mặc định `0.0.0.0`; trên server thật đặt `FRONTEND_BIND=127.0.0.1` rồi để reverse proxy trỏ vào). API và Postgres nằm
@@ -71,6 +74,25 @@ Mỗi service có cả `build:` lẫn `image:`. Khi CI build + push lên registr
 docker compose cp path/to/tree.json api:/tmp/tree.json
 docker compose exec api python scripts/seed_members.py /tmp/tree.json
 ```
+
+### Quản lý các họ (thay cho trang superadmin, chưa làm)
+
+Chạy trong container API (hoặc `uv run python scripts/manage.py ...` trong `genealogy-api/`):
+
+```bash
+M="docker compose exec -T -w /app api python scripts/manage.py"
+$M list                                                                   # các họ và người dùng
+$M create-tree --name "Nguyễn Tộc Làng Phú Ốc" --slug phu-oc              # tạo họ (slug: chữ thường, số, gạch ngang)
+$M rename-tree --slug phu-oc --name "Tên mới" --new-slug ten-moi          # đổi tên/slug
+$M create-user --email a@x.com --name "Tên" --role admin --tree phu-oc    # tạo admin của họ (bỏ --password: tự sinh, in một lần)
+$M create-user --email me@x.com --name "Tôi" --role superadmin            # superadmin không thuộc họ nào
+$M set-role --email a@x.com --role superadmin                             # đổi vai trò (admin/member cần --tree)
+```
+
+- Mỗi họ có link riêng: **`http://<máy>:3000/t/<slug>`**. Mở link đó một lần là trình duyệt nhớ họ nào (cookie) để khách xem
+  (nếu họ đó công khai) và đăng ký đúng họ. Nếu hệ thống chỉ có **một** họ thì không cần link.
+- Nạp dữ liệu vào một họ: `docker compose exec api python scripts/seed_members.py /tmp/tree.json --tree-slug phu-oc`.
+- Đã có sẵn dữ liệu từ bản cũ? Migration chuyển hết vào một họ `default`; đổi tên bằng `rename-tree` và đặt superadmin bằng `set-role`.
 
 ## 2. Backend riêng và chạy test (`genealogy-api/`)
 
