@@ -77,6 +77,12 @@ Mở `http://<máy>:3000/nhap-lieu`: bảng sửa trực tiếp từng ô (tự 
 là thêm con; ô trống = giữ nguyên, ô `-` = xoá; sai một dòng thì cả file không được nhập, có bước xem thử trước khi áp dụng).
 Cập nhật bản đang chạy: `docker compose up --build -d` (migration tự chạy khi API khởi động).
 
+### Yêu cầu cập nhật và nhật ký thay đổi
+
+- Thành viên **không sửa trực tiếp**: họ mở hồ sơ một người → **Đề xuất chỉnh sửa** (sửa thông tin / thêm con / báo sai). Admin vào **Yêu cầu** xem bản cũ – bản mới rồi **Duyệt** (áp dụng ngay) hoặc **Từ chối** (kèm lý do). Người gửi xem kết quả ở cùng trang.
+- **Nhật ký** (`/nhat-ky`, admin): mọi thay đổi trên cây — ai, lúc nào, từ giá trị nào sang giá trị nào (kể cả nhập CSV, tách dòng, chi phái, duyệt yêu cầu).
+- **Email báo** (admin khi có yêu cầu mới, người gửi khi có kết quả) chỉ chạy khi đã đặt `SMTP_HOST` trong `.env`; không có SMTP thì vẫn dùng bình thường qua huy hiệu số trên menu.
+
 ### Tìm kiếm, chi phái, thống kê
 
 - **Tìm kiếm** (`/tim-kiem`, hoặc "Tìm nâng cao" trong ô tìm trên cùng): gõ không dấu cũng được, tìm cả vợ/chồng, lọc theo đời/chi/năm sinh/quê/giới tính/còn sống-đã mất, gợi ý khi gõ sai.
