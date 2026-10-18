@@ -80,6 +80,17 @@ COOKIE_SECURE=true
 - **Sao lưu/khôi phục**: `scripts/backup.sh`, `scripts/restore.sh`, hướng dẫn và nhật ký diễn tập trong [docs/SAO-LUU.md](docs/SAO-LUU.md).
 - **Xuất toàn bộ dữ liệu**: trang **Xuất bản** (admin) → "Tải dữ liệu JSON" (`GET /api/export/data.json`; không có mật khẩu/token).
 
+### Tạo tài khoản quản trị tối cao đầu tiên (superadmin)
+
+Người đăng ký **đầu tiên** khi chưa có tài khoản nào tự thành superadmin. Nếu mở web ra Internet trước khi bạn đăng ký, người lạ vào trước sẽ chiếm quyền. Vì vậy trên production:
+
+1. Đặt `BOOTSTRAP_CODE` trong `.env` (ví dụ `openssl rand -base64 18`), rồi `docker compose up -d`.
+2. Mở trang **Signup**: lần cài đặt đầu tiên hiện thêm ô "Mã khởi tạo". Nhập đúng mã thì tài khoản đó là superadmin; sai mã thì không có gì được tạo.
+3. Sau đó mã không còn tác dụng (chỉ áp dụng khi chưa có tài khoản nào); có thể giữ hoặc xoá khỏi `.env`.
+4. Hoặc không cần mã: tạo bằng dòng lệnh `docker compose exec api python scripts/manage.py create-user --role superadmin --email ... --name ... --password ...`.
+
+Admin của từng họ do superadmin tạo ở trang **Các họ** (`/he-thong`): tạo họ mới kèm admin đầu tiên.
+
 ### Quyền riêng tư theo trường
 
 Trang **Quản trị** (admin) → "Quyền riêng tư": mỗi trường (điện thoại, email, nơi ở, ghi chú, nơi an nghỉ, ảnh, quê quán) đặt mức xem
