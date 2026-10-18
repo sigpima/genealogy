@@ -51,11 +51,9 @@ x-api-environment: &api-environment
   SMTP_PASSWORD: ${SMTP_PASSWORD:-}
   SMTP_FROM: ${SMTP_FROM:-}
   SMTP_USE_TLS: ${SMTP_USE_TLS:-true}
-  # Giới hạn tần suất đăng nhập/đăng ký... (xem DOCKER.md "Bảo mật & vận hành"). TRUSTED_PROXY_HOPS=1 chỉ khi
+  # Giới hạn tần suất đăng nhập, quên mật khẩu, link mời... (xem DOCKER.md "Bảo mật & vận hành"). TRUSTED_PROXY_HOPS=1 chỉ khi
   # có nginx/Caddy phía trước web và nó ghi đè X-Forwarded-For; để 0 nếu không (mặc định).
   RATE_LIMIT_ENABLED: ${RATE_LIMIT_ENABLED:-true}
-  # Mã khởi tạo: khi chưa có tài khoản nào, đăng ký đầu tiên (thành quản trị tối cao) phải nhập đúng mã này. BẮT BUỘC đặt khi mở ra Internet.
-  BOOTSTRAP_CODE: ${BOOTSTRAP_CODE:-}
   TRUSTED_PROXY_HOPS: ${TRUSTED_PROXY_HOPS:-0}
 
 services:

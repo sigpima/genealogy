@@ -22,10 +22,9 @@ docker compose up --build -d
 - Mở http://127.0.0.1:3000 trên chính máy này, hoặc `http://<IP máy>:3000` từ máy khác (đổi cổng bằng `FRONTEND_PORT`).
 - **Nhiều họ (gia phả) trên một hệ thống.** Mỗi họ có **cây riêng**, **admin riêng**, người dùng và cài đặt riêng; dữ liệu
   các họ **tách biệt hoàn toàn**. Vai trò: **superadmin** (chủ hệ thống, không thuộc họ nào, có quyền ở mọi họ),
-  **admin** (quản trị đúng một họ), **thành viên** (chỉ xem họ của mình). Tài khoản **đầu tiên** đăng ký trên hệ thống
-  trống tự thành superadmin (và một họ mặc định được tạo). Người đăng ký sau vào họ họ chọn (xem `/t/<tên-họ>` bên
-  dưới) và mặc định **chờ admin của họ đó duyệt**. Admin vào mục **Quản trị** để duyệt/tạo người dùng và đổi cài đặt
-  (đăng ký: cần duyệt/mở/đóng; xem: riêng tư/công khai) **của họ mình**.
+  **admin** (quản trị đúng một họ), **thành viên** (chỉ xem họ của mình). Không có đăng ký công khai: superadmin đầu tiên tạo bằng dòng lệnh
+  (xem "Tạo tài khoản quản trị tối cao đầu tiên"), admin của họ do superadmin tạo, thành viên do admin tạo hoặc mời bằng link. Admin vào mục **Quản trị**
+  để tạo/mời người dùng và đổi cài đặt (xem: riêng tư/công khai) **của họ mình**.
 - **Trang cho superadmin**: `http://<máy>:3000/he-thong` (mục "Các họ" ở menu trái) — xem danh sách họ, tạo họ kèm admin (mật khẩu tạm hiện một lần), đổi
   tên/slug, và chuyển sang xem/quản trị một họ (có ô chọn họ ở thanh trên khi có từ hai họ). Dòng lệnh (mục "Quản lý các họ") vẫn dùng được, và là cách duy nhất để đặt
   thêm superadmin. **Ảnh đại diện chỉ hiện với người được xem họ đó** (đăng nhập đúng họ, superadmin, hoặc họ đang công khai).
@@ -72,7 +71,7 @@ COOKIE_SECURE=true
   ```
   rồi `.env`: `FRONTEND_BIND=127.0.0.1`, `FRONTEND_ORIGIN=https://gia-pha.example.com`, `COOKIE_SECURE=true`, **`TRUSTED_PROXY_HOPS=1`**.
 - **Giới hạn tần suất** (`RATE_LIMIT_ENABLED`, mặc định bật): đăng nhập (20 lần/5 phút mỗi địa chỉ; **8 lần sai/5 phút mỗi tài khoản**),
-  đăng ký (10/giờ), quên mật khẩu (5/giờ), trả lời thiệp (40/10 phút) → HTTP 429. Đo thực tế: proxy `/api` của Next.js **không** chuyển địa chỉ người
+  quên mật khẩu (5/giờ), link mời (30/5 phút), trả lời thiệp (40/10 phút) → HTTP 429. Đo thực tế: proxy `/api` của Next.js **không** chuyển địa chỉ người
   truy cập sang API, nên khi chưa có nginx phía trước, mọi người "cùng một địa chỉ" và giới hạn theo địa chỉ được nới ×5 để không chặn cả nhà
   (giới hạn theo tài khoản mới là thứ chặn đoán mật khẩu). Bộ đếm nằm trong bộ nhớ của một tiến trình API (compose chạy đúng một) — chạy nhiều bản API thì mỗi bản đếm riêng.
 - **Header bảo mật**: API gửi `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`; web gửi thêm `Permissions-Policy` và
@@ -82,19 +81,24 @@ COOKIE_SECURE=true
 
 ### Tạo tài khoản quản trị tối cao đầu tiên (superadmin)
 
-Người đăng ký **đầu tiên** khi chưa có tài khoản nào tự thành superadmin. Nếu mở web ra Internet trước khi bạn đăng ký, người lạ vào trước sẽ chiếm quyền. Vì vậy trên production:
+**Không có đăng ký công khai.** Tài khoản đi vào hệ thống bằng đúng ba cửa: (1) bạn, chủ máy chủ, tạo **superadmin** bằng dòng lệnh; (2) superadmin tạo **một họ cùng admin đầu tiên** của họ đó; (3) admin tạo tài khoản hoặc gửi **link mời** gắn với từng người trong cây (xem bên dưới). Người lạ vào được trang web cũng không tự tạo được tài khoản nào.
 
-1. Đặt `BOOTSTRAP_CODE` trong `.env` (ví dụ `openssl rand -base64 18`), rồi `docker compose up -d`.
-2. Mở trang **Signup**: lần cài đặt đầu tiên hiện thêm ô "Mã khởi tạo". Nhập đúng mã thì tài khoản đó là superadmin; sai mã thì không có gì được tạo.
-3. Sau đó mã không còn tác dụng (chỉ áp dụng khi chưa có tài khoản nào); có thể giữ hoặc xoá khỏi `.env`.
-4. Hoặc không cần mã: tạo bằng dòng lệnh `docker compose exec api python scripts/manage.py create-user --role superadmin --email ... --name ... --password ...`.
+Lần cài đầu tiên (chưa có tài khoản nào), chạy một lần:
 
-Admin của từng họ do superadmin tạo ở trang **Các họ** (`/he-thong`): tạo họ mới kèm admin đầu tiên.
+```bash
+docker compose exec api python scripts/manage.py create-user --role superadmin --email ban@example.com --name "Tên bạn" --password 'mật-khẩu-dài-ít-nhất-8-ký-tự'
+```
+
+(bỏ `--password` thì hệ thống tự sinh và in ra một lần). Đăng nhập bằng tài khoản đó: chưa có họ nào nên trang chủ đưa thẳng tới **Quản trị nền tảng** (`/he-thong`) để tạo họ đầu tiên.
+
+Admin của từng họ do superadmin tạo ở trang **Các họ** (`/he-thong`): tạo họ mới kèm admin đầu tiên (mật khẩu hiện một lần). Admin cũng là một thành viên của họ: sau khi nhập liệu xong, admin mở hồ sơ người của mình trong cây và bấm **"Đây là tôi"** (không cần ai duyệt).
+
+**Mời người trong họ**: admin mở hồ sơ một người → **"Mời người này"** → sao chép link (hiện **một lần**, hiệu lực 14 ngày, mỗi người một link; tạo link mới thì link cũ hết tác dụng). Người nhận mở link, đặt email và mật khẩu, vào thẳng cây ở đúng vị trí của mình ("Hồ sơ của tôi"). Danh sách link và nút **Thu hồi** nằm ở **Quản trị → Người dùng**.
 
 ### Quản trị tối cao (superadmin): ai làm được gì
 
 - **Superadmin** là chủ nền tảng (không thuộc họ nào), vào được mọi họ. **Admin** chỉ quản trị đúng một họ; **thành viên** chỉ xem và đề xuất. Không ai trong họ thấy hay đụng được superadmin.
-- **Tạo superadmin đầu tiên**: người đăng ký đầu tiên khi chưa có tài khoản nào (trên production hãy đặt `BOOTSTRAP_CODE`, xem trên). Muốn cấp thêm quyền superadmin: `docker compose exec api python scripts/manage.py set-role --email ... --role superadmin` (trang web cố ý không cấp được).
+- **Tạo superadmin đầu tiên**: bằng dòng lệnh `create-user` (xem trên). Muốn cấp thêm quyền superadmin: `docker compose exec api python scripts/manage.py set-role --email ... --role superadmin` (trang web cố ý không cấp được).
 - **Quên mật khẩu superadmin**: `docker compose exec api python scripts/manage.py set-password --email ...` (tự sinh và in ra một lần; hoặc thêm `--password`). Không cần email.
 - Trang **Quản trị nền tảng** (`/he-thong`, menu "Các họ"): màn hình đầu là **Cần làm** (họ không còn admin hoạt động, họ đang tạm ngưng, bộ nhắc việc ngừng chạy, chưa sao lưu, ổ đĩa sắp đầy) cùng số liệu cả hệ thống.
   - **Các họ**: tạo họ kèm admin đầu tiên (mật khẩu hiện một lần), đổi tên/đường dẫn, **Tạm ngưng** (mọi người của họ bị đăng xuất ngay và không đăng nhập được; link lịch, thiệp mời, khách xem ngừng; không mất dữ liệu) và **Kích hoạt lại**, **Xoá họ** (chỉ họ đang tạm ngưng, phải gõ lại đường dẫn; xoá hẳn dữ liệu và ảnh, không khôi phục được — nên tải JSON của họ trước).
@@ -198,7 +202,7 @@ $M set-role --email a@x.com --role superadmin                             # đ�
 ```
 
 - Mỗi họ có link riêng: **`http://<máy>:3000/t/<slug>`**. Mở link đó một lần là trình duyệt nhớ họ nào (cookie) để khách xem
-  (nếu họ đó công khai) và đăng ký đúng họ. Nếu hệ thống chỉ có **một** họ thì không cần link.
+  (nếu họ đó công khai) và biết đang đăng nhập vào họ nào. Nếu hệ thống chỉ có **một** họ thì không cần link.
 - Nạp dữ liệu vào một họ: `docker compose exec api python scripts/seed_members.py /tmp/tree.json --tree-slug phu-oc`.
 - Đã có sẵn dữ liệu từ bản cũ? Migration chuyển hết vào một họ `default`; đổi tên bằng `rename-tree` và đặt superadmin bằng `set-role`.
 
