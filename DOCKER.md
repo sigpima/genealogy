@@ -91,6 +91,17 @@ Người đăng ký **đầu tiên** khi chưa có tài khoản nào tự thành
 
 Admin của từng họ do superadmin tạo ở trang **Các họ** (`/he-thong`): tạo họ mới kèm admin đầu tiên.
 
+### Quản trị tối cao (superadmin): ai làm được gì
+
+- **Superadmin** là chủ nền tảng (không thuộc họ nào), vào được mọi họ. **Admin** chỉ quản trị đúng một họ; **thành viên** chỉ xem và đề xuất. Không ai trong họ thấy hay đụng được superadmin.
+- **Tạo superadmin đầu tiên**: người đăng ký đầu tiên khi chưa có tài khoản nào (trên production hãy đặt `BOOTSTRAP_CODE`, xem trên). Muốn cấp thêm quyền superadmin: `docker compose exec api python scripts/manage.py set-role --email ... --role superadmin` (trang web cố ý không cấp được).
+- **Quên mật khẩu superadmin**: `docker compose exec api python scripts/manage.py set-password --email ...` (tự sinh và in ra một lần; hoặc thêm `--password`). Không cần email.
+- Trang **Quản trị nền tảng** (`/he-thong`, menu "Các họ"): màn hình đầu là **Cần làm** (họ không còn admin hoạt động, họ đang tạm ngưng, bộ nhắc việc ngừng chạy, chưa sao lưu, ổ đĩa sắp đầy) cùng số liệu cả hệ thống.
+  - **Các họ**: tạo họ kèm admin đầu tiên (mật khẩu hiện một lần), đổi tên/đường dẫn, **Tạm ngưng** (mọi người của họ bị đăng xuất ngay và không đăng nhập được; link lịch, thiệp mời, khách xem ngừng; không mất dữ liệu) và **Kích hoạt lại**, **Xoá họ** (chỉ họ đang tạm ngưng, phải gõ lại đường dẫn; xoá hẳn dữ liệu và ảnh, không khôi phục được — nên tải JSON của họ trước).
+  - **Quản trị viên** của từng họ: thêm admin mới, nâng một người của họ lên admin, vô hiệu hoá/kích hoạt lại (luôn còn ít nhất một), đặt mật khẩu mới (hiện một lần).
+  - **Nhật ký nền tảng**: những gì superadmin đã làm với các họ, kể cả mỗi lần **vào một họ để hỗ trợ** (nút "Xem cây"/"Quản trị" và ô chọn họ ở đầu trang đều ghi lại trước khi chuyển). Những gì superadmin sửa *bên trong* một họ nằm trong nhật ký của họ đó, dưới tên superadmin.
+  - **Hệ thống**: cơ sở dữ liệu, bộ nhắc việc (lần chạy gần nhất), email đã cấu hình chưa, ổ đĩa, dung lượng ảnh, và tình trạng sao lưu đầy đủ (kể cả tổng số người cả hệ thống). Sao lưu/khôi phục vẫn làm bằng script trên máy chủ.
+
 ### Quyền riêng tư theo trường
 
 Trang **Quản trị** (admin) → "Quyền riêng tư": mỗi trường (điện thoại, email, nơi ở, ghi chú, nơi an nghỉ, ảnh, quê quán) đặt mức xem
