@@ -86,6 +86,9 @@ services:
     environment: *api-environment
     volumes:
       - uploads_data:/app/uploads
+      # Bản sao lưu do scripts/backup.sh ghi (chỉ đọc): trang Quản trị → Sao lưu chỉ hiện tình trạng, không tải/tạo bản nào.
+      # Tạo thư mục trước (mkdir -p backups) để nó thuộc user của bạn, không phải root do Docker tự tạo.
+      - ${BACKUP_HOST_DIR:-./backups}:/app/backups:ro
     depends_on:
       db:
         condition: service_healthy

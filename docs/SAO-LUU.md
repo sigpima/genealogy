@@ -27,6 +27,8 @@ thư mục `backups/` đã nằm trong `.gitignore`.
 Ngoài ra trang **Xuất bản** (admin) có nút tải toàn bộ dữ liệu dạng JSON — bản đọc được bằng mắt, tiện mang đi nơi khác,
 nhưng KHÔNG thay cho sao lưu (không có ảnh, không có tài khoản đăng nhập).
 
+**Xem tình trạng ngay trong web:** Quản trị → **Sao lưu** (và việc "Chưa có bản sao lưu…" trên trang Cần làm) cho biết bản gần nhất lúc nào, bao lâu rồi, dung lượng bao nhiêu. Trang này chỉ *đọc* thư mục `backups/` (compose gắn vào API ở chế độ chỉ đọc) và cố ý không có nút tạo/tải bản sao lưu — mỗi bản chứa dữ liệu của mọi họ trên máy chủ. Hãy `mkdir -p backups` trước khi `docker compose up` để thư mục thuộc user của bạn.
+
 ## Khôi phục
 
 **Luôn diễn tập trước** — bản sao lưu chưa từng khôi phục thử thì chưa chắc dùng được:
