@@ -16,3 +16,7 @@
 
 # Bản sao lưu (chứa dữ liệu thật của dòng họ)
 /backups/
+
+/note/
+# Phiên brainstorm trực quan (mockup tạm)
+.superpowers/
