@@ -76,7 +76,7 @@ COOKIE_SECURE=true
   (giới hạn theo tài khoản mới là thứ chặn đoán mật khẩu). Bộ đếm nằm trong bộ nhớ của một tiến trình API (compose chạy đúng một) — chạy nhiều bản API thì mỗi bản đếm riêng.
 - **Header bảo mật**: API gửi `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`; web gửi thêm `Permissions-Policy` và
   (bản production) `Content-Security-Policy`.
-- **Sao lưu/khôi phục**: `scripts/backup.sh`, `scripts/restore.sh`, hướng dẫn và nhật ký diễn tập trong [docs/SAO-LUU.md](docs/SAO-LUU.md).
+- **Sao lưu/khôi phục**: `scripts/backup-nightly.sh` (cron mỗi đêm, chép ra ngoài máy qua `backup.conf`), `scripts/backup.sh`, `scripts/restore.sh`, hướng dẫn và nhật ký diễn tập trong [docs/SAO-LUU.md](docs/SAO-LUU.md). `.env` không nằm trong bản sao lưu: tự cất riêng.
 - **Xuất toàn bộ dữ liệu**: trang **Xuất bản** (admin) → "Tải dữ liệu JSON" (`GET /api/export/data.json`; không có mật khẩu/token).
 
 ### Tạo tài khoản quản trị tối cao đầu tiên (superadmin)
