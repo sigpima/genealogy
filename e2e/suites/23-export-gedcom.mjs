@@ -1,0 +1,16 @@
+import { B, ok, newPage, login, api, finish } from '../lib.mjs';
+const p = await newPage({ width: 1280, height: 900 });
+await login(p, 'admin@example.com');
+await p.goto(B + '/xuat-ban', { waitUntil: 'networkidle' });
+const link = p.getByRole('link', { name: 'Tải GEDCOM' });
+ok('Xuất bản has a GEDCOM download', (await link.count()) === 1 && (await link.getAttribute('href')) === '/api/export/data.ged');
+const r = await api(p, 'GET', '/export/data.ged');
+const text = await r.text();
+ok('the file is a GEDCOM 5.5.1 of this family', r.status() === 200 && text.startsWith('0 HEAD') && text.trimEnd().endsWith('0 TRLR') && text.includes('2 VERS 5.5.1'));
+ok('it names people with the family name between slashes', /\/Nguy.n\//.test(text) && text.includes('0 @F1@ FAM'));
+ok('it does not leak the other family', !text.includes('Họ Trần'));
+ok('it is sent as an attachment named after the family', /attachment; filename="gia-pha-ho-nguyen\.ged"/.test(r.headers()['content-disposition'] ?? ''));
+const m = await newPage({ width: 1280, height: 900 });
+await login(m, 'thanhvien@example.com');
+ok('a member cannot download it', (await api(m, 'GET', '/export/data.ged')).status() === 403);
+await finish();
