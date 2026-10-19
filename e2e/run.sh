@@ -21,11 +21,15 @@ mkdir -p "$E2E/out"; rm -f "$E2E/state.json"
 pids=()
 cleanup() {
   [ -n "${KEEP_STACK:-}" ] && { echo "stack left running (KEEP_STACK=1): web :$WEB_PORT api :$API_PORT db :$PG_PORT"; return; }
-  for pid in "${pids[@]:-}"; do [ -n "$pid" ] && kill "$pid" 2>/dev/null; done
+  # each server runs in its own process group (setsid): killing only the wrapper would leave next-server behind
+  for pid in "${pids[@]:-}"; do [ -n "$pid" ] && kill -- "-$pid" 2>/dev/null; done
   docker rm -f "$PG" >/dev/null 2>&1
 }
 trap cleanup EXIT
 
+for port in $API_PORT $WEB_PORT; do
+  [ -z "$(ss -ltn "sport = :$port" 2>/dev/null | tail -n +2)" ] || { echo "port $port is already in use (a stack left by KEEP_STACK=1?): stop it first" >&2; exit 2; }
+done
 command -v docker >/dev/null || { echo "docker is needed" >&2; exit 2; }
 [ -x "$ROOT/genealogy-api/.venv/bin/uvicorn" ] || { echo "run 'uv sync' in genealogy-api first" >&2; exit 2; }
 [ -d "$E2E/node_modules/playwright-core" ] || (cd "$E2E" && npm install --no-audit --no-fund >/dev/null) || exit 2
@@ -44,7 +48,7 @@ unset DATABASE_URL
 rm -rf "$UPLOAD_DIR" "$BACKUP_DIR"; mkdir -p "$UPLOAD_DIR" "$BACKUP_DIR"
 .venv/bin/python -c "from app.core.config import get_settings as g; print('database:', g().database_url.split('@')[1])"
 .venv/bin/alembic upgrade head >"$E2E/out/api-migrate.log" 2>&1 || { tail -5 "$E2E/out/api-migrate.log"; exit 2; }
-.venv/bin/uvicorn app.main:app --port $API_PORT >"$E2E/out/api.log" 2>&1 & pids+=($!)
+setsid .venv/bin/uvicorn app.main:app --port $API_PORT >"$E2E/out/api.log" 2>&1 & pids+=($!)
 for _ in $(seq 1 30); do curl -sf "$API_URL/health" >/dev/null && break; sleep 1; done
 curl -sf "$API_URL/health" >/dev/null || { echo "api did not start (see e2e/out/api.log)" >&2; exit 2; }
 .venv/bin/python scripts/manage.py create-user --email root@example.com --name Root --role superadmin --password password-123 | tail -1
@@ -56,7 +60,7 @@ if [ -z "${E2E_SKIP_BUILD:-}" ] || [ "$(cat .next/.e2e-api 2>/dev/null)" != "$AP
   API_BASE_URL="$API_URL" npm run build >"$E2E/out/web-build.log" 2>&1 || { tail -15 "$E2E/out/web-build.log"; exit 2; }
   echo "$API_URL" > .next/.e2e-api
 fi
-API_BASE_URL="$API_URL" npx next start -p $WEB_PORT -H 127.0.0.1 >"$E2E/out/web.log" 2>&1 & pids+=($!)
+API_BASE_URL="$API_URL" setsid npx next start -p $WEB_PORT -H 127.0.0.1 >"$E2E/out/web.log" 2>&1 & pids+=($!)
 for _ in $(seq 1 30); do curl -sf "http://127.0.0.1:$WEB_PORT/login" >/dev/null && break; sleep 1; done
 curl -sf "http://127.0.0.1:$WEB_PORT/login" >/dev/null || { echo "web did not start (see e2e/out/web.log)" >&2; exit 2; }
 
