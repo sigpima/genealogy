@@ -1,0 +1,34 @@
+import { B, OUT, ok, newPage, login, api, j, finish } from '../lib.mjs';
+const p = await newPage({ width: 1280, height: 900 });
+await login(p, 'admin@example.com');
+const tree = await j(await api(p, 'GET', '/members/tree'));
+// two people sharing a name part so ranking matters: add "Nguyễn Văn Hai" duplicates deeper and a person named exactly "Hai"
+const exact = (await j(await api(p, 'POST', '/members', { full_name: 'Hai', parent_id: tree.id }))).id;
+await p.goto(B + '/', { waitUntil: 'networkidle' });
+await p.waitForTimeout(1500);
+const box = p.getByLabel('Tìm thành viên theo tên');
+await box.fill('hai');
+await p.waitForTimeout(900);
+const items = await p.locator('header ul li button').allInnerTexts();
+console.log(JSON.stringify(items));
+ok('results are short rows: name + "đời N · con …", not a chain of ancestors', items.length > 0 && items.every((t) => !t.includes('→')) && items.some((t) => /đời \d/.test(t)));
+ok('the exact name ranks first', items[0].startsWith('Hai'), items[0]);
+ok('at most 8 rows', items.length <= 8);
+await box.fill('NGUYEN van ba');
+await p.waitForTimeout(900);
+ok('accents/case ignored', (await p.locator('header ul li button').first().innerText()).includes('Nguyễn Văn Ba'));
+await p.locator('header ul li button').first().click();
+await p.waitForTimeout(1200);
+ok('choosing a result clears the box and opens the person on the tree', (await box.inputValue()) === '');
+await box.fill('zzzzqq');
+await p.waitForTimeout(900);
+ok('no match shows the "Không có kết quả" row and the advanced-search link', (await p.getByText('Không có kết quả khớp tên.').count()) === 1 && (await p.getByRole('link', { name: /Tìm nâng cao/ }).count()) === 1);
+// panel: no "Xem tổ tiên 4 đời"
+await box.fill('');
+await p.goto(B + `/?focus=${tree.children[0].id}`, { waitUntil: 'networkidle' });
+await p.waitForTimeout(1500);
+await p.getByRole('button', { name: new RegExp(tree.children[0].name) }).first().click();
+await p.waitForTimeout(900);
+ok('panel: "Xem tổ tiên 4 đời" is gone, the ancestor line stays', (await p.getByRole('button', { name: /Xem tổ tiên/ }).count()) === 0 && (await p.getByText('Dòng tổ tiên').count()) === 1);
+await p.screenshot({ path: OUT + '/hs-panel.png' });
+await finish();

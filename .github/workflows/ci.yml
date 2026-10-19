@@ -1,0 +1,16 @@
+# Used only if this repository is ever pushed to GitHub; locally run scripts/verify.sh instead (same steps).
+name: ci
+on: [push, pull_request]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: recursive }
+      - uses: astral-sh/setup-uv@v5
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: cd genealogy-api && uv sync
+      - run: cd genealogy-web && npm ci
+      - run: cd e2e && npm ci && npx playwright-core install --with-deps chromium
+      - run: scripts/verify.sh

@@ -1,0 +1,34 @@
+import { B, OUT, ok, newPage, login, api, j, finish } from '../lib.mjs';
+// 1. phone: "Hồ sơ của tôi" in the drawer for a linked member
+const admin = await newPage();
+await login(admin, 'admin@example.com');
+const stamp = Date.now().toString().slice(-5);
+const tree = await j(await api(admin, 'GET', '/members/tree'));
+const person = (await j(await api(admin, 'POST', '/members', { full_name: 'Lê Thị Điện Thoại', parent_id: tree.id }))).id;
+const inv = await j(await api(admin, 'POST', `/members/${person}/invitation`));
+const phone = await newPage({ width: 390, height: 800 });
+await phone.goto(B + inv.path, { waitUntil: 'networkidle' });
+await phone.getByLabel('Email').fill(`dt${stamp}@example.com`);
+await phone.getByLabel('Mật khẩu', { exact: true }).fill('mat-khau-moi-1');
+await phone.getByLabel('Nhập lại mật khẩu').fill('mat-khau-moi-1');
+await phone.getByRole('button', { name: /Tạo tài khoản/ }).click();
+await phone.waitForURL((u) => u.pathname === '/', { timeout: 15000 });
+await phone.waitForTimeout(2500);
+await phone.getByRole('button', { name: 'Mở menu' }).click();
+const item = phone.getByRole('link', { name: /Hồ sơ của tôi/ });
+ok('phone drawer has "Hồ sơ của tôi" with the name', (await item.count()) === 1 && (await item.innerText()).includes('Lê Thị Điện Thoại'));
+const box = await item.boundingBox();
+ok('...and it is a 44px target', box.height >= 43.5);
+await item.click();
+await phone.waitForTimeout(2500);
+await phone.screenshot({ path: OUT + '/fb-fixes-phone.png' });
+ok('...it brings the tree back to the person', (await phone.getByRole('button', { name: /Lê Thị Điện Thoại/ }).count()) >= 1 && new URL(phone.url()).pathname === '/');
+// 2. places: a link with coordinates hides the map picker
+await admin.goto(B + '/dia-diem', { waitUntil: 'networkidle' });
+await admin.getByRole('button', { name: /Thêm địa điểm/ }).first().click();
+ok('picker offered with no link', (await admin.getByRole('button', { name: /chọn vị trí trên bản đồ/i }).count()) === 1);
+await admin.getByLabel('Link Google Maps').fill('https://www.google.com/maps/place/x/@21.0285,105.8542,15z');
+ok('picker hidden when the link carries a position', (await admin.getByRole('button', { name: /chọn vị trí trên bản đồ/i }).count()) === 0 && (await admin.getByText('Vị trí trên bản đồ lấy từ link').count()) === 1);
+await admin.getByLabel('Link Google Maps').fill('https://maps.app.goo.gl/AbCd123');
+ok('picker back for a short link', (await admin.getByRole('button', { name: /chọn vị trí trên bản đồ/i }).count()) === 1);
+await finish();
