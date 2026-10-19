@@ -77,7 +77,7 @@ COOKIE_SECURE=true
 - **Header bảo mật**: API gửi `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`; web gửi thêm `Permissions-Policy` và
   (bản production) `Content-Security-Policy`.
 - **Sao lưu/khôi phục**: `scripts/backup-nightly.sh` (cron mỗi đêm, chép ra ngoài máy qua `backup.conf`), `scripts/backup.sh`, `scripts/restore.sh`, hướng dẫn và nhật ký diễn tập trong [docs/SAO-LUU.md](docs/SAO-LUU.md). `.env` không nằm trong bản sao lưu: tự cất riêng.
-- **Xuất toàn bộ dữ liệu**: trang **Xuất bản** (admin) → "Tải dữ liệu JSON" (`GET /api/export/data.json`; không có mật khẩu/token).
+- **Xuất toàn bộ dữ liệu**: trang **Xuất bản** (admin) → "Tải dữ liệu JSON" (`GET /api/export/data.json`; không có mật khẩu/token). Cũng ở đó: "Tải GEDCOM" (`GET /api/export/data.ged`, GEDCOM 5.5.1 để mở trong Ancestry/MyHeritage/Gramps; chỉ có người, vợ chồng, con — không ảnh/tài liệu/chi phái; ngày âm lịch giữ năm + ghi chú). Chỉ xuất, chưa có nhập.
 
 ### Tạo tài khoản quản trị tối cao đầu tiên (superadmin)
 
