@@ -1,16 +1,16 @@
 # Chạy bằng Docker
 
-Có 3 file compose, mỗi file một mục đích:
+Có 4 file compose, mỗi file một mục đích:
 
 | File | Dùng để | Có gì |
 |---|---|---|
-| `docker-compose.yml` (thư mục gốc) | Chạy **đủ bộ** như khi deploy | Postgres + `genealogy-api` + `genealogy-web` |
+| `docker-compose.yml` (thư mục gốc) | Chạy **đủ bộ** từ source (dev, build tại chỗ) | Postgres + `genealogy-api` + `genealogy-web` + worker |
+| `docker-compose.prod.yml` (thư mục gốc) | **Production** trên server: chỉ kéo image dựng sẵn từ GHCR | như trên, không có `build:`; xem "Triển khai lên server" |
 | `genealogy-api/docker-compose.yml` | Phát triển và **chạy test** backend | Postgres dev, Postgres test (tmpfs), API |
 | `genealogy-web/docker-compose.yml` | Chạy **riêng frontend** | web (bản production) hoặc web-dev (hot reload) |
 
 Mô hình theo `../fashion-web/docker-compose.yml` (mạng public/private, healthcheck,
-giới hạn log, biến bắt buộc), bỏ phần MinIO/GHCR vì dự án này lưu ảnh đại diện trên
-đĩa và chưa có CI đẩy image.
+giới hạn log, biến bắt buộc), bỏ phần MinIO vì dự án này lưu ảnh đại diện trên đĩa.
 
 ## 1. Chạy đủ bộ (thư mục gốc)
 
@@ -111,11 +111,48 @@ Admin của từng họ do superadmin tạo ở trang **Các họ** (`/he-thong`
 Trang **Quản trị** (admin) → "Quyền riêng tư": mỗi trường (điện thoại, email, nơi ở, ghi chú, nơi an nghỉ, ảnh, quê quán) đặt mức xem
 **Chỉ admin / Thành viên / Công khai** (công khai = cả khách vào cây đang mở công khai). Mặc định giữ đúng như trước GĐ11.
 
-### Dùng image build sẵn thay vì build tại server
+## Triển khai lên server
 
-Mỗi service có cả `build:` lẫn `image:`. Khi CI build + push lên registry, đặt trong
-`.env` `API_IMAGE`, `API_IMAGE_TAG`, `WEB_IMAGE`, `WEB_IMAGE_TAG`, rồi
-`docker compose pull && docker compose up -d`. Ghim tag để rollback.
+Luồng chuẩn: push `main` → GitHub Actions (test → build) → `ghcr.io/sigpima/genealogy-be` và `ghcr.io/sigpima/genealogy-fe` → trên server chạy `./update.sh`.
+Server không build, không clone repo. Mỗi repo con (`genealogy-api`, `genealogy-web`) có `.github/workflows/image.yml`: job `test` (pytest trên Postgres thật /
+tsc + lint + vitest) phải xanh thì job `image` mới đẩy hai tag `latest` và `sha-<7 ký tự>` (chỉ `linux/amd64`).
+
+**Một lần:** đặt package ghcr của hai image sang **public** (image không chứa bí mật) hoặc `docker login ghcr.io` trên server bằng PAT chỉ có `read:packages`;
+cài Docker + Compose ≥ 2.24; firewall chỉ mở 22/80/443; cài nginx + certbot trên host.
+
+**Đưa lên server** (thư mục `~/genealogy/` chỉ có 3 file):
+
+```bash
+scp docker-compose.prod.yml  server:~/genealogy/docker-compose.yml    # đổi tên
+scp deploy/update.sh         server:~/genealogy/update.sh
+scp .env                     server:~/genealogy/.env && ssh server chmod 600 ~/genealogy/.env
+ssh server 'mkdir -p ~/genealogy/backups'                              # API mount chỉ đọc để báo tình trạng sao lưu
+```
+
+`.env` **riêng cho server** (không dùng lại `.env` của máy dev). Biến thật sự cần:
+
+```
+POSTGRES_USER=genealogy
+POSTGRES_PASSWORD=<dài ≥ 24 ký tự, ngẫu nhiên>
+POSTGRES_DB=genealogy
+JWT_SECRET=<openssl rand -hex 32>
+FRONTEND_ORIGIN=https://<domain>      # bắt buộc, không có mặc định
+# COOKIE_SECURE=true và TRUSTED_PROXY_HOPS=1 đã là mặc định của bản prod; web chỉ bind 127.0.0.1:34020
+# SMTP_*  — xem bên dưới
+```
+
+nginx: copy `deploy/nginx.conf.example`, đổi domain, `certbot certonly --nginx -d <domain>`, `nginx -t && systemctl reload nginx`.
+Cổng host của web là **34020** (đã ghi vào sổ cổng của server). Sau lần `./update.sh` đầu tiên, tạo superadmin (mục dưới).
+
+**Cập nhật / rollback** (chạy trên server): `./update.sh`. Ghim một bản build: `API_IMAGE_TAG=sha-abc1234 ./update.sh` hoặc `WEB_IMAGE_TAG=sha-def5678 ./update.sh`
+(hai image ở hai repo nên sha khác nhau; muốn ghim lâu dài thì sửa trong `.env`). Tag xem ở GitHub → Packages.
+
+**Email (SMTP):** chưa đặt `SMTP_HOST` thì "Quên mật khẩu" vẫn trả 200 nhưng **không gửi mail**, và email báo yêu cầu/nhắc giỗ cũng không đi. Khi đó người quên mật khẩu phải nhờ admin
+đặt lại, còn superadmin dùng `scripts/manage.py set-password`. Đưa lên Internet cho cả họ dùng thì nên đặt SMTP thật (`SMTP_HOST/PORT/USERNAME/PASSWORD/FROM`).
+
+**Swagger:** `/api/docs`, `/api/redoc`, `/api/openapi.json` đi được qua web proxy nên `deploy/nginx.conf.example` chặn (404).
+
+**Chưa nằm trong chuẩn deploy (cần quyết định riêng):** đưa `scripts/backup*.sh` + cron + chỗ lưu ngoài máy lên server, deploy tự động từ Actions, giám sát/cảnh báo.
 
 ### Lưu ý khi cấu hình
 
@@ -248,12 +285,10 @@ docker compose --profile dev up web-dev      # bản dev, hot reload (lần đ�
 ## Ghi chú
 
 - Thư mục gốc `gia_pha/` là một git repo, cấu trúc giống `fashion-web`: `genealogy-api` và
-  `genealogy-web` là **submodule** (mỗi cái giữ lịch sử riêng; repo gốc chỉ ghi commit đang
-  dùng). `.gitmodules` đang để URL tạm `./genealogy-api` / `./genealogy-web` vì hai repo
-  chưa có remote — khi đẩy lên GitHub/GitLab nhớ đổi URL thật:
-  `git submodule set-url genealogy-api git@...:org/genealogy-api.git` (tương tự cho web),
-  rồi commit `.gitmodules`. Sau khi sửa code trong một submodule, vào thư mục đó commit,
-  rồi ở gốc `git add genealogy-api` để "bump" commit mới.
+  `genealogy-web` là **submodule** (remote `sigpima/genealogy-be` và `sigpima/genealogy-fe`; mỗi cái giữ lịch sử
+  và CI riêng, repo gốc chỉ ghi commit đang dùng). Sau khi sửa code trong một submodule, vào thư mục đó commit,
+  rồi ở gốc `git add genealogy-api` để "bump" commit mới. Repo gốc không có CI (submodule riêng tư cần PAT):
+  chạy `scripts/verify.sh` bằng tay trước khi deploy.
 - `.gitignore` gốc đang chặn tạm `genealogy-legacy/` (bản Spring Boot cũ, chứa mật khẩu
   DB/JWT thô trong `application.properties`, chưa phải git repo) và các ảnh `*.png` /
   `*.jpeg` rời ở gốc — xoá các dòng "TẠM" khi đã dọn.

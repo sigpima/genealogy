@@ -18,9 +18,8 @@
 #   - "private_net" (internal: true, không ra Internet): db + api + web nói
 #     chuyện với nhau. db chỉ nằm trên mạng này.
 #
-# Image: có `build:` nên chạy được ngay từ source; có thêm `image:` để khi sau
-# này CI build + push lên một registry thì chỉ cần đặt API_IMAGE/WEB_IMAGE (+
-# *_IMAGE_TAG) trong .env rồi `docker compose pull` thay vì build tại server.
+# Image: có `build:` nên chạy được ngay từ source; có thêm `image:` để chạy được
+# image dựng sẵn khi đặt API_IMAGE/WEB_IMAGE (+ *_IMAGE_TAG) trong .env.
 # Sao lưu: scripts/backup.sh (Postgres + uploads) và scripts/restore.sh, xem docs/SAO-LUU.md.
 
 name: genealogy
@@ -120,6 +119,13 @@ services:
       - private_net
       - public_net  # SMTP
     restart: unless-stopped
+    # Mức sống còn: còn với tới được database (vòng lặp chạy cả giờ mới ghi log một lần nên không có tín hiệu "vừa chạy").
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; socket.create_connection(('db', 5432), 3).close()"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
     logging: *default-logging
 
   web:

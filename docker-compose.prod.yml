@@ -1,0 +1,152 @@
+# Bản PRODUCTION (chỉ có `image:`, không `build:`). Chuẩn: ~/.claude/CLAUDE.md, mục "Triển khai".
+# docker-compose.yml ở gốc repo là bản dev/build tại chỗ; file này độc lập với nó.
+#
+# Trên server (~/genealogy/) chỉ có 3 file, đưa lên bằng scp:
+#   scp docker-compose.prod.yml  server:~/genealogy/docker-compose.yml     # đổi tên thành docker-compose.yml
+#   scp deploy/update.sh         server:~/genealogy/update.sh
+#   scp .env                     server:~/genealogy/.env                   # rồi chmod 600 .env
+# Cập nhật: ./update.sh. Rollback/ghim: API_IMAGE_TAG=sha-abc1234 WEB_IMAGE_TAG=sha-def5678 ./update.sh
+# (hai image ở hai repo khác nhau nên hai sha khác nhau; muốn ghim lâu dài thì sửa trong .env).
+#
+# Cổng host 34020 (khối 34020-34029 dành cho dự án này, đã ghi vào ~/.claude/standards/deploy-ghcr/ports.md), chỉ bind 127.0.0.1;
+# nginx trên host (deploy/nginx.conf.example) là cổng ra Internet. API và Postgres không publish cổng nào.
+#
+# Lần cài đầu, sau khi `./update.sh` chạy xong, tạo superadmin một lần (xem DOCKER.md):
+#   docker compose exec api python scripts/manage.py create-user --role superadmin --email ... --name "..."
+# Sao lưu: scripts/backup*.sh chưa nằm trong chuẩn deploy nên chưa được đưa lên server (xem docs/SAO-LUU.md).
+
+name: genealogy
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+x-api-environment: &api-environment
+  POSTGRES_HOST: db
+  POSTGRES_PORT: 5432
+  POSTGRES_USER: ${POSTGRES_USER:?thiếu POSTGRES_USER trong .env}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?thiếu POSTGRES_PASSWORD trong .env}
+  POSTGRES_DB: ${POSTGRES_DB:?thiếu POSTGRES_DB trong .env}
+  JWT_SECRET: ${JWT_SECRET:?thiếu JWT_SECRET trong .env (openssl rand -hex 32)}
+  JWT_EXPIRE_MINUTES: ${JWT_EXPIRE_MINUTES:-60}
+  # Origin thật mà browser dùng (https://<domain>): CORS và cookie dựa vào nó. Không có mặc định, để khỏi chạy nhầm với localhost.
+  FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:?thiếu FRONTEND_ORIGIN trong .env (https://<domain>)}
+  # Prod luôn sau nginx HTTPS: cookie Secure, và tin đúng 1 proxy (nginx ghi đè X-Forwarded-For) để giới hạn tần suất theo địa chỉ thật.
+  COOKIE_SECURE: ${COOKIE_SECURE:-true}
+  TRUSTED_PROXY_HOPS: ${TRUSTED_PROXY_HOPS:-1}
+  RATE_LIMIT_ENABLED: ${RATE_LIMIT_ENABLED:-true}
+  UPLOAD_DIR: /app/uploads
+  SMTP_HOST: ${SMTP_HOST:-}
+  SMTP_PORT: ${SMTP_PORT:-587}
+  SMTP_USERNAME: ${SMTP_USERNAME:-}
+  SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+  SMTP_FROM: ${SMTP_FROM:-}
+  SMTP_USE_TLS: ${SMTP_USE_TLS:-true}
+
+services:
+
+  db:
+    image: postgres:18.6
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?thiếu POSTGRES_USER trong .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?thiếu POSTGRES_PASSWORD trong .env}
+      POSTGRES_DB: ${POSTGRES_DB:?thiếu POSTGRES_DB trong .env}
+    volumes:
+      # postgres:18+ mount ở /var/lib/postgresql (không phải .../data); mount sai chỗ sẽ crash-loop.
+      - postgres_data:/var/lib/postgresql
+    networks:
+      - private_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    logging: *default-logging
+
+  api:
+    image: ghcr.io/sigpima/genealogy-be:${API_IMAGE_TAG:-latest}
+    environment: *api-environment
+    volumes:
+      - uploads_data:/app/uploads
+      # Bản sao lưu do scripts/backup.sh ghi (chỉ đọc): trang Quản trị chỉ hiện tình trạng. Chưa có thư mục này thì
+      # `mkdir -p backups` trước (để nó thuộc user của bạn, không phải root do Docker tự tạo).
+      - ${BACKUP_HOST_DIR:-./backups}:/app/backups:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      # private_net là internal (không ra Internet); api join thêm public_net để gửi mail SMTP.
+      - private_net
+      - public_net
+    restart: unless-stopped
+    # Image tự chạy `alembic upgrade head` rồi mới khởi động uvicorn (idempotent), nên không cần service migrate riêng
+    # khi chỉ chạy đúng một bản api. Chạy nhiều bản api thì tách migration ra service `restart: "no"`.
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    logging: *default-logging
+
+  # Nhắc giỗ/sự kiện mỗi giờ (thông báo trong web, và email khi đặt SMTP_HOST). Cùng image và cấu hình với api; chạy lại không nhắc trùng.
+  worker:
+    image: ghcr.io/sigpima/genealogy-be:${API_IMAGE_TAG:-latest}
+    command: ["python", "scripts/run_reminders.py", "--interval", "3600"]
+    environment: *api-environment
+    depends_on:
+      api:
+        condition: service_healthy  # api áp migration tạo các bảng mà worker dùng
+    networks:
+      - private_net
+      - public_net  # SMTP
+    restart: unless-stopped
+    # Vòng lặp chạy cả giờ mới ghi log một lần nên không có tín hiệu "vừa chạy" để dựa vào; kiểm tra ở mức sống còn:
+    # còn với tới được database. Lần chạy gần nhất xem ở trang /he-thong của superadmin.
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; socket.create_connection(('db', 5432), 3).close()"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    logging: *default-logging
+
+  web:
+    # API_BASE_URL (http://api:8000) đã đóng băng vào image lúc CI build (build-args trong genealogy-fe/.github/workflows):
+    # service phải tên đúng là "api".
+    image: ghcr.io/sigpima/genealogy-fe:${WEB_IMAGE_TAG:-latest}
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-34020}:3000"
+    networks:
+      - public_net
+      - private_net
+    restart: unless-stopped
+    healthcheck:
+      # "/" redirect sang /login khi chưa đăng nhập: 3xx vẫn là sống.
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    logging: *default-logging
+
+networks:
+  # Nếu MTU của server nhỏ hơn 1500 (vd 1492) thì đặt DOCKER_NETWORK_MTU=1492, kẻo gói lớn bị rớt âm thầm khi API gọi ra ngoài.
+  public_net:
+    driver_opts:
+      com.docker.network.driver.mtu: "${DOCKER_NETWORK_MTU:-1500}"
+  private_net:
+    internal: true
+    driver_opts:
+      com.docker.network.driver.mtu: "${DOCKER_NETWORK_MTU:-1500}"
+
+volumes:
+  postgres_data:
+  uploads_data:
