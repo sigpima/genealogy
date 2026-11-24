@@ -243,6 +243,24 @@ $M set-role --email a@x.com --role superadmin                             # đ�
 - Nạp dữ liệu vào một họ: `docker compose exec api python scripts/seed_members.py /tmp/tree.json --tree-slug phu-oc`.
 - Đã có sẵn dữ liệu từ bản cũ? Migration chuyển hết vào một họ `default`; đổi tên bằng `rename-tree` và đặt superadmin bằng `set-role`.
 
+### Bản demo cho khách (`/guest`)
+
+`/guest` mở một họ **`demo` chứa toàn dữ liệu giả** để cho người ngoài xem sản phẩm mà không chạm dữ liệu thật. Họ này **công khai**, chỉ có phần khách thật được xem
+(cây, hồ sơ, tìm kiếm, thống kê, chi phái, sử ký, dòng thời gian, bài đệm, lịch giỗ/sự kiện; không ảnh, địa điểm, quản trị), và có dải "Bản demo — toàn bộ dữ liệu trên trang này là giả" ở đầu trang.
+
+```bash
+docker compose exec api python scripts/seed_demo.py     # tạo họ demo (~94 người, 6 đời); chạy lại = đặt lại về đúng bản cũ
+```
+
+Rồi đưa link `https://<domain>/guest` cho người xem. Script không nhận tham số: nó chỉ chạm họ có slug `demo`, và **từ chối** (không đổi gì) nếu họ đó có tài khoản đăng nhập
+hoặc không mang tên "Họ Demo (dữ liệu giả)". Dòng đầu tiên nó in là `Đích: host:cổng/database` để bạn thấy nó đang trỏ vào đâu.
+
+Vì họ demo nằm **chung database** với các họ thật (vẫn tách hẳn theo họ), cần biết:
+- Họ demo có mặt trong **sao lưu** và trong số liệu/danh sách của superadmin (tên rõ là demo; trang Cần làm không báo nó "không có quản trị viên").
+- Khi có từ hai họ trở lên, khách chỉ vào được bằng link có slug (`/t/<slug>`): nếu sau này một họ thật bật công khai thì phát link `/t/<slug>` của họ đó.
+- Ai đang **đăng nhập** bằng tài khoản thật rồi mở `/guest` vẫn thấy họ của mình (đăng nhập thắng cookie). Muốn xem demo thì dùng cửa sổ ẩn danh hoặc đăng xuất.
+- Gỡ bản demo: ở `/he-thong`, tạm ngưng rồi xoá họ `demo` (hoặc cứ để đó; chạy lại script sẽ tạo lại).
+
 ## 2. Backend riêng và chạy test (`genealogy-api/`)
 
 ```bash
