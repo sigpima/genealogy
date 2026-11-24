@@ -249,7 +249,7 @@ $M set-role --email a@x.com --role superadmin                             # đ�
 (cây, hồ sơ, tìm kiếm, thống kê, chi phái, sử ký, dòng thời gian, bài đệm, lịch giỗ/sự kiện; không ảnh, địa điểm, quản trị), và có dải "Bản demo — toàn bộ dữ liệu trên trang này là giả" ở đầu trang.
 
 ```bash
-docker compose exec api python scripts/seed_demo.py     # tạo họ demo (~94 người, 6 đời); chạy lại = đặt lại về đúng bản cũ
+docker compose exec api python scripts/seed_demo.py     # tạo họ demo (~110 người, 6 đời); chạy lại = đặt lại về đúng bản cũ
 ```
 
 Rồi đưa link `https://<domain>/guest` cho người xem. Script không nhận tham số: nó chỉ chạm họ có slug `demo`, và **từ chối** (không đổi gì) nếu họ đó có tài khoản đăng nhập
